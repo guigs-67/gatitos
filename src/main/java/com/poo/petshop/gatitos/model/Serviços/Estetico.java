@@ -1,5 +1,6 @@
 package com.poo.petshop.gatitos.model.Serviços;
 import java.math.BigDecimal;
+import java.util.StringJoiner;
 
 public class Estetico extends Servicos {
 
@@ -26,6 +27,20 @@ public class Estetico extends Servicos {
 
         return precoFinal;
     }
+        @Override
+    public String getDescricaoDetalhada() {
+        // Usa um StringJoiner para juntar na string quando forem selecionados os dois serviços estéticos
+        StringJoiner descricao = new StringJoiner(" e ");
+        if (incluiBanho) {
+            descricao.add("Banho");
+        }
+        if (incluiTosa) {
+            descricao.add("Tosa");
+        }
+        // Se não tiver banho ou tosa retorna o nome base.
+        return descricao.length() > 0 ? descricao.toString() : this.nome;
+    }
+
 
  //Métodos Get e Set para o usuário alterar os atributos respeitando o encapsulamento
     public void setIncluiBanho(boolean incluiBanho){

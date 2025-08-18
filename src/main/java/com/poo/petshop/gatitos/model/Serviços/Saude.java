@@ -1,5 +1,6 @@
 package com.poo.petshop.gatitos.model.Serviços;
 import java.math.BigDecimal;
+import java.util.StringJoiner;
 
 public class Saude extends Servicos {
 
@@ -24,6 +25,20 @@ public class Saude extends Servicos {
         }
 
         return precoFinal;
+    }
+
+    @Override
+    public String getDescricaoDetalhada() {
+        // Usa um StringJoiner para juntar na string quando forem selecionados os dois serviços de saúde.
+        StringJoiner descricao = new StringJoiner(" e ");
+        if (consultaEspecialista) {
+            descricao.add("Consulta com Especialista");
+        }
+        if (vacina) {
+            descricao.add("Vacina");
+        }
+        // Se não tiver consulta ou vacina retorna o nome base do serviço
+        return descricao.length() > 0 ? descricao.toString() : this.nome;
     }
 
      //Métodos Get e Set para o usuário alterar os atributos respeitando o encapsulamento

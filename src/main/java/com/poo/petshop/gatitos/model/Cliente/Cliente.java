@@ -17,7 +17,7 @@ public class Cliente {
         this.nome = nome;
         this.animais = new ArrayList<>(); //Lista com animais que inicialmente começa vazia
     }
-
+    
     public void adicionarAnimal(Animal animal){ //método pega um animal que já foi cadastrado e adiciona ele a lista de animais do cliente
         this.animais.add(animal);
     }

@@ -31,4 +31,7 @@ public abstract class Servicos {
 
   //Método abstrato que vai variar conforme o serviço solicitado
   public abstract BigDecimal calcularPrecoFinal();
+
+  //Método abstrato que vai criar a descrição do serviço que usarei na "impressão da nota fiscal"
+  public abstract String getDescricaoDetalhada();
 }

@@ -1,63 +1,69 @@
-    package com.poo.petshop.gatitos.controller;
+package com.poo.petshop.gatitos.controller;
 
-    import com.poo.petshop.gatitos.model.Animal.Animal;
-    import java.util.ArrayList;
-    import java.util.List;
-    import java.util.Scanner;
+import com.poo.petshop.gatitos.model.Animal.Animal;
+import com.poo.petshop.gatitos.service.AnimalService;
 
-    public class AnimalController {
+import java.util.List;
+import java.util.Scanner;
 
-        private List<Animal> animais;
-        private Scanner scanner;
+public class AnimalController {
 
-        public AnimalController() {
-            this.animais = new ArrayList<>();
-            this.scanner = new Scanner(System.in);
-        }
+    private AnimalService animalService;
+    private Scanner scanner;
 
-        // Cadastrar animal 
-        public void cadastrarAnimal() {
-            System.out.print("Digite o nome do animal: ");
-            String nome = scanner.nextLine();
-            System.out.print("Digite o peso do animal: ");
-            int peso = Integer.parseInt(scanner.nextLine());
-            System.out.print("Digite o porte do animal: ");
-            String porte = scanner.nextLine();
-            System.out.print("Digite a espécie do animal: ");
-            String especie = scanner.nextLine();
-            System.out.print("Digite a raça do animal: ");
-            String raca = scanner.nextLine();
-            System.out.print("Digite o sexo do animal: ");
-            String sexo = scanner.nextLine();
+    public AnimalController() {
+        this.animalService = new AnimalService();
+        this.scanner = new Scanner(System.in);
+    }
 
-            Animal animal = new Animal(nome, peso, porte, especie, raca, sexo);
-            animais.add(animal);
-            System.out.println("Animal cadastrado com sucesso!");
-        }
+    // Cadastro usando o construtor definido na model
+    public void cadastrarAnimal() {
+        System.out.print("Digite o nome do animal: ");
+        String nome = scanner.nextLine();
+        System.out.print("Digite o peso do animal: ");
+        int peso = Integer.parseInt(scanner.nextLine());
+        System.out.print("Digite o porte do animal: ");
+        String porte = scanner.nextLine();
+        System.out.print("Digite a espécie do animal: ");
+        String especie = scanner.nextLine();
+        System.out.print("Digite a raça do animal: ");
+        String raca = scanner.nextLine();
+        System.out.print("Digite o sexo do animal: ");
+        String sexo = scanner.nextLine();
 
-        //função para remover animal pelo nome
-        public void removerAnimal(String nome) {
-		Animal animal = buscarAnimalPorNome(nome);
-		if (animal != null) {
-			animais.remove(animal);
-			System.out.println("Animal removido com sucesso!");
-		} else {
-			System.out.println("Não foi possível remover o animal, pois ele não foi encontrado.");
-		}
-	}
+        Animal animal = new Animal(nome, peso, porte, especie, raca, sexo);
+        animalService.cadastrarAnimal(animal);
+    }
 
-        public List<Animal> listarAnimais() {
-        return new ArrayList<>(animais); // Cópia da lista de animais para evitar modificações externas, respeitando o encapsulamento  
-        }
+    // Chamada da função de remoção definida na Service
+    public void removerAnimal(String nome) {
+        animalService.removerAnimal(nome);
+    }
 
-        // Buscar animal pelo nome
-        public Animal buscarAnimalPorNome(String nome) {
+    // Chamada da função de Listagem definida na Service
+    public void listarAnimais() {
+        List<Animal> animais = animalService.listarAnimais();
+        if (animais.isEmpty()) {
+            System.out.println("Nenhum animal cadastrado.");
+        } else {
             for (Animal animal : animais) {
-                if (animal.getNome().equalsIgnoreCase(nome)) {
-                    return animal;
-                }
+                System.out.println("Nome: " + animal.getNome() +
+                        ", Peso: " + animal.getPeso() +
+                        ", Porte: " + animal.getPorte() +
+                        ", Espécie: " + animal.getEspecie() +
+                        ", Raça: " + animal.getRaca() +
+                        ", Sexo: " + animal.getSexo());
             }
-            System.out.println("Animal não encontrado: " + nome);
-            return null;
         }
     }
+
+    // Chamada da função de Busca definida na Service
+    public void buscarAnimal(String nome) {
+        Animal animal = animalService.buscarAnimalPorNome(nome);
+        if (animal != null) {
+            System.out.println("Animal encontrado: " + animal.getNome());
+        } else {
+            System.out.println("Animal não encontrado.");
+        }
+    }
+}

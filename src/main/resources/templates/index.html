@@ -1,10 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PetCare</title>
+
+  <!-- Fonte -->
+  <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+<link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
 
+  <!-- MENU -->
+  <section id="menu" class="active">
+    <h1 class="title">MENU</h1>
+    <div class="logo">
+      <img src="logo.png" alt="Logo PetCare">
+      <h2>PETCARE</h2>
+    </div>
+   <div class="options">
+  <div class="btn" onclick="goTo('cadastramento')">
+    <span>Cadastrar / Atualizar Cliente</span>
+  </div>
+
+  <a class="btn" href="pagina2.html">
+    <span>Realizar Serviço</span>
+  </a>
+
+ <a class="btn" href="pagina3.html">
+    <span>Emitir nota fiscal</span>
+  </a>
+  </section>
+
+  <!-- CADASTRAMENTO -->
+  <section id="cadastramento">
+    <div class="back" onclick="goTo('menu')">⬅</div>
+    <h1 class="title">CADASTRAMENTO</h1>
+    <div class="logo">
+      <img src="logo.png" alt="Logo PetCare">
+      <h2>PETCARE</h2>
+    </div>
+    <p style="font-size:28px;">O que deseja?</p>
+    <div class="options">
+      <div class="btn" onclick="goTo('cadastro-cliente')"><span>Cadastrar Cliente</span></div>
+      <div class="btn" onclick="goTo('atualizar-cliente')"><span>Atualizar Cadastro</span></div>
+    </div>
+  </section>
+
+  <!-- CADASTRO CLIENTE -->
+  <section id="cadastro-cliente">
+    <div class="back" onclick="goTo('cadastramento')">⬅</div>
+    <h1 class="title">CADASTRO DE CLIENTE</h1>
+    <input class="input" placeholder="Nome do Cliente">
+    <input class="input" placeholder="Endereço do Cliente">
+    <input class="input" placeholder="Telefone do Cliente">
+    <input class="input" placeholder="CPF do Cliente">
+    <div class="btn" onclick="goTo('cadastro-pet')"><span>Adicionar Pets</span></div>
+  </section>
+
+  <!-- ATUALIZAÇÃO CLIENTE -->
+  <section id="atualizar-cliente">
+    <div class="back" onclick="goTo('cadastramento')">⬅</div>
+    <h1 class="title">ATUALIZAÇÃO DE CADASTRO</h1>
+    <input class="input" placeholder="CPF Atual do Cliente">
+    <input class="input" placeholder="Atualizar Nome">
+    <input class="input" placeholder="Atualizar Endereço">
+    <input class="input" placeholder="Atualizar Telefone">
+    <input class="input" placeholder="Atualizar CPF">
+    <div class="btn" onclick="goTo('cadastro-pet')"><span>Atualizar Pets?</span></div>
+    <div class="btn-rect">Salvar Alterações</div>
+  </section>
+
+  <!-- CADASTRO PET -->
+  <section id="cadastro-pet">
+    <div class="back" onclick="goTo('cadastro-cliente')">⬅</div>
+    <h1 class="title">CADASTRO DE PETS</h1>
+    <input class="input" placeholder="Nome do Pet">
+    <input class="input" placeholder="Espécie do Pet">
+    <input class="input" placeholder="Raça do Pet">
+    <input class="input" placeholder="Estatura do Pet">
+    <input class="input" placeholder="Peso do Pet">
+    <div>
+      <button class="sex-btn sex-m">M</button>
+      <span style="font-size:28px;">SEXO</span>
+      <button class="sex-btn sex-f">F</button>
+    </div>
+    <div class="btn-rect">Cadastrar Pet e Adicionar Outro</div>
+    <div class="btn-rect" onclick="goTo('menu')">Cadastrar Pet e Voltar ao Menu</div>
+  </section>
+
+  <!-- SERVIÇO -->
+  <section id="servico">
+    <div class="back" onclick="goTo('menu')">⬅</div>
+    <h1 class="title">REALIZAR SERVIÇO</h1>
+    <p>🚧 Em construção...</p>
+  </section>
+
+  <!-- NOTA FISCAL -->
+  <section id="nota">
+    <div class="back" onclick="goTo('menu')">⬅</div>
+    <h1 class="title">EMITIR NOTA FISCAL</h1>
+    <p>🚧 Em construção...</p>
+  </section>
+
+  <!-- JS -->
+  <script src="script.js"></script>
 </body>
 </html>

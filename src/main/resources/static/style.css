@@ -1,131 +1,198 @@
 body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Amatic SC', cursive;
-  background: #fff;
-  color: #111;
-  text-align: center;
+    margin: 0;
+    padding: 0;
+    font-family: 'Amatic SC', cursive;
+    background: #fff;
+    color: #111;
+    text-align: center;
 }
 
 h1, h2, h3 {
-  font-weight: 400;
-  margin: 0;
+    font-weight: 400;
+    margin: 0;
 }
-
-.logo {
-  margin: 20px auto;
-}
-
-.logo img {
-  width: 180px;
-}
-
-.logo h2 {
-  font-size: 42px;
-  margin-top: 10px;
-}
-
-/* Containers das telas */
 section {
-  display: none;
-  padding: 40px;
-  min-height: 100vh;
+    display: none;
+    padding: 40px;
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
 section.active {
-  display: block;
+    display: block;
 }
 
 .title {
-  font-size: 48px;
-  margin-bottom: 40px;
+    font-size: 48px;
+    margin-bottom: 40px;
 }
 
-/* Botões orgânicos */
-.btn {
-  width: 220px;
-  height: 220px;
-  border: 2px solid #111;
-  border-radius: 50% / 30%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 28px;
-  text-align: center;
-  line-height: 1.2;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  margin: 20px auto;
+.logo {
+    margin: 20px auto;
 }
 
-.btn:hover {
-  background: #f4f4f4;
-  transform: scale(1.05);
+.logo img {
+    width: 180px;
 }
 
-.btn span {
-  border-bottom: 2px solid #111;
+.logo h2 {
+    font-size: 42px;
+    margin-top: 10px;
 }
 
 .options {
-  display: flex;
-  justify-content: center;
-  gap: 60px;
-  flex-wrap: wrap;
-  margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    flex-wrap: wrap;
+    margin-top: 50px;
+}
+
+
+.btn {
+    width: 220px;
+    height: 220px;
+    border: 2px solid #111;
+    border-radius: 50% / 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    text-align: center;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 20px auto;
+    text-decoration: none; 
+    color: #111; 
+}
+
+.btn:hover {
+    background: #f4f4f4;
+    transform: scale(1.05);
+}
+
+.btn span {
+    border-bottom: 2px solid #111;
 }
 
 /* Inputs estilo caixa */
 .input {
-  width: 300px;
-  padding: 10px;
-  font-size: 24px;
-  border: 2px solid #111;
-  border-radius: 16px;
-  margin: 10px auto;
-  display: block;
-  font-family: 'Amatic SC', cursive;
-  box-shadow: 4px 4px 0px #000;
+    width: 300px;
+    padding: 10px;
+    font-size: 24px;
+    border: 2px solid #111;
+    border-radius: 16px;
+    margin: 10px auto;
+    display: block;
+    font-family: 'Amatic SC', cursive;
+    box-shadow: 4px 4px 0px #000;
 }
 
 /* Botão retangular */
 .btn-rect {
-  display: inline-block;
-  padding: 12px 20px;
-  font-size: 26px;
-  border: 2px solid #111;
-  border-radius: 12px;
-  margin: 10px;
-  cursor: pointer;
-  transition: 0.2s;
-  box-shadow: 4px 4px 0px #000;
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 26px;
+    border: 2px solid #111;
+    border-radius: 12px;
+    margin: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 4px 4px 0px #000;
 }
 
 .btn-rect:hover {
-  background: #f4f4f4;
-  transform: scale(1.05);
+    background: #f4f4f4;
+    transform: scale(1.05);
 }
 
-/* Botões de sexo */
 .sex-btn {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: none;
-  font-size: 28px;
-  color: #fff;
-  cursor: pointer;
-  margin: 20px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: none;
+    font-size: 28px;
+    color: #fff;
+    cursor: pointer;
+    margin: 20px;
 }
 
 .sex-m { background: #00aaff; }
 .sex-f { background: #ff66cc; }
 
-/* Botão voltar */
 .back {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  font-size: 40px;
-  cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+#nota {
+    text-align: center;
+}
+
+#nota .nota-container {
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+    margin: 0 auto; 
+}
+
+#nota .header {
+    margin-bottom: 20px;
+}
+
+#nota .logo {
+    width: 120px;
+    display: block;
+    margin: 0 auto;
+}
+
+#nota h1 {
+    font-size: 2.5rem;
+    margin: 10px 0;
+}
+
+#nota .nota {
+    border: 2px solid #000;
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: left;
+    box-shadow: 6px 6px 0px #000;
+}
+
+#nota .nota h2, #nota .nota h3 {
+    text-align: center;
+    margin: 5px 0;
+}
+
+#nota .tabela {
+    width: 100%;
+    margin: 15px 0;
+    border-collapse: collapse;
+}
+
+#nota .tabela th, #nota .tabela td {
+    padding: 5px;
+    text-align: center;
+    border-bottom: 1px dashed #000;
+}
+
+#nota .imprimir {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.2rem; /* ~20px */
+    border: 2px solid #000;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 4px 4px 0px #000;
+    transition: transform 0.2s;
+}
+
+#nota .imprimir:hover {
+    transform: scale(1.05);
 }

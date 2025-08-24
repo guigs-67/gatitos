@@ -14,14 +14,16 @@ public class NotaFiscal {
 
     private int id;
     private Cliente cliente;
+    //Atributo para "imprimir" hora e data exata
     private final LocalDateTime dataHora;
     private final List<Servicos> servicos;
     private List<ItemNota> itens;
     private BigDecimal totalFinal;
 
-    //Construtor
+    //Construtor 
     public NotaFiscal(Cliente cliente) {
         this.cliente = cliente;
+        //Atributos iniciados automaticamente na criação de cada Nota
         this.dataHora = LocalDateTime.now();
         this.servicos = new ArrayList<>();
         this.itens = new ArrayList<>();
@@ -45,6 +47,20 @@ public class NotaFiscal {
     public BigDecimal getTotalFinal() {
         return this.totalFinal;
     }
+
+    //Construtor para copiar minha nota fiscal, solução utilizada para garantir o nosso encapsulamento nos metodos de retorno que usaremos em notafiscalService, garantimos que a lista retornada seja uma copia que será utilizada para impressão, assim não terá perigo de modificarmos o objeto original quebrando o encapsulamento.
+    public NotaFiscal(NotaFiscal original) {
+        // Copia os valores dos atributos simples
+        this.id = original.id;
+        this.cliente = original.cliente;
+        this.dataHora = original.dataHora;
+        this.totalFinal = original.totalFinal;
+        
+        // Cria novas listas para garantir indepedência do objeto original.
+        this.servicos = new ArrayList<>(original.servicos);
+        this.itens = new ArrayList<>(original.itens);
+    }
+
     //Adiciona um dos serviços à nota
     public void adicionarServico(Servicos servico) {
         this.servicos.add(servico);

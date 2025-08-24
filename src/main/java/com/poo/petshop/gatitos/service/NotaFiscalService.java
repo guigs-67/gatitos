@@ -24,7 +24,16 @@ public class NotaFiscalService {
         return novaNota;
     }
     //Metodo para buscar uma nota pelo ID.
-    public NotaFiscal buscarPorId(int id) {
-    return bancoDeNotas.get(id); 
+    public NotaFiscal buscarCopiaPorId(int id) {
+        // Percorre a lista original para encontrar a nota
+        for (NotaFiscal notaOriginal : this.bancoDeNotas) {
+            //Se achar o id retorna o clone da nota original.
+            if (notaOriginal.getId() == id) {
+                //Polimorfismo de sobrecarga: mesma assinatura mas como o parametro é de outro tipo retorna a nota fiscal esperada (o clone).
+                return new NotaFiscal(notaOriginal);
+            }
+        }
+        //Se não achar o id da nota até o final do loop chama o tratamento de exceções:
+        throw new RuntimeException("ERRO!!! Nota Fiscal com ID: " + id + " não foi encontrada!");
     }
 }

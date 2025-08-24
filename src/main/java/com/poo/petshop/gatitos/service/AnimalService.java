@@ -16,13 +16,31 @@ public class AnimalService {
     }
 
     // Recebe um objeto Animal e adiciona na lista
-    public void cadastrarAnimal(Animal animal) {
+    public boolean cadastrarAnimal(Animal animal) {
+        if (animal == null) {
+            System.out.println("Erro: animal não pode ser nulo!");
+            return false;
+        }
+        if (animal.getNome() == null || animal.getNome().trim().isEmpty()) {
+            System.out.println("Erro: nome do animal não pode ser vazio!");
+            return false;
+        }
+        if (animal.getPeso() <= 0) {
+            System.out.println("Erro: peso do animal deve ser maior que zero!");
+            return false;
+        }
+        if (animal.getEspecie() == null || animal.getEspecie().trim().isEmpty()) {
+            System.out.println("Erro: espécie não pode ser vazia!");
+            return false;
+        }
+
         animais.add(animal);
         System.out.println("Animal cadastrado com sucesso!");
+        return true;
     }
 
     // Retorna true se removeu com sucesso, false se não encontrou, fazendo todo processamento de remoção intermamente, sem "vazar" nenhum dado da lista
-      public boolean removerAnimal(String nome) {
+    public boolean removerAnimal(String nome) {
         for (int i = 0; i < animais.size(); i++) {
             if (animais.get(i).getNome().equalsIgnoreCase(nome)) {
                 animais.remove(i);
@@ -35,20 +53,20 @@ public class AnimalService {
     }
 
     // Retorna uma lista de cópias dos animais cadastrados, pois assim, o usuário não terá acesso direto a lista original
-   public List<Animal> listarAnimais() {
-    List<Animal> copia = new ArrayList<>();
-    for (Animal animal : animais) {
-        copia.add(new Animal(
-            animal.getNome(),
-            animal.getPeso(),
-            animal.getPorte(),
-            animal.getEspecie(),    
-            animal.getRaca(),
-            animal.getSexo()
-        ));
+    public List<Animal> listarAnimais() {
+        List<Animal> copia = new ArrayList<>();
+        for (Animal animal : animais) {
+            copia.add(new Animal(
+                animal.getNome(),
+                animal.getPeso(),
+                animal.getPorte(),
+                animal.getEspecie(),    
+                animal.getRaca(),
+                animal.getSexo()
+            ));
+        }
+        return copia;
     }
-    return copia;
-}
 
     // Compara o nome dado, ao nome de cada um dos animias cadastrado e retorna uma cópia do objeto Animal que tiver o nome igual ao parâmetro
     public Animal buscarAnimalPorNome(String nome) {

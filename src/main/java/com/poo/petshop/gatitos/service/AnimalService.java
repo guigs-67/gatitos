@@ -16,34 +16,71 @@ public class AnimalService {
     }
 
     // Recebe um objeto Animal e adiciona na lista
-    public void cadastrarAnimal(Animal animal) {
+    public boolean cadastrarAnimal(Animal animal) {
+        if (animal == null) {
+            System.out.println("Erro: animal não pode ser nulo!");
+            return false;
+        }
+        if (animal.getNome() == null || animal.getNome().trim().isEmpty()) {
+            System.out.println("Erro: nome do animal não pode ser vazio!");
+            return false;
+        }
+        if (animal.getPeso() <= 0) {
+            System.out.println("Erro: peso do animal deve ser maior que zero!");
+            return false;
+        }
+        if (animal.getEspecie() == null || animal.getEspecie().trim().isEmpty()) {
+            System.out.println("Erro: espécie não pode ser vazia!");
+            return false;
+        }
+
         animais.add(animal);
         System.out.println("Animal cadastrado com sucesso!");
+        return true;
     }
- 
-    // Retorna true se removeu com sucesso, false se não encontrou
+
+    // Retorna true se removeu com sucesso, false se não encontrou, fazendo todo processamento de remoção intermamente, sem "vazar" nenhum dado da lista
     public boolean removerAnimal(String nome) {
-        Animal animal = buscarAnimalPorNome(nome); 
-        if (animal != null) {
-            animais.remove(animal); 
-            System.out.println("Animal removido com sucesso!");
-            return true;
+        for (int i = 0; i < animais.size(); i++) {
+            if (animais.get(i).getNome().equalsIgnoreCase(nome)) {
+                animais.remove(i);
+                System.out.println("Animal removido com sucesso!");
+                return true;
+            }
         }
-        System.out.println(" Animal não encontrado para remoção: " + nome);
+        System.out.println("Animal não encontrado para remoção: " + nome);
         return false;
     }
 
-    // Retorna uma cópia da lista para não ter risco do encapsulamento ser quebrado
+    // Retorna uma lista de cópias dos animais cadastrados, pois assim, o usuário não terá acesso direto a lista original
     public List<Animal> listarAnimais() {
-        return new ArrayList<>(animais);
+        List<Animal> copia = new ArrayList<>();
+        for (Animal animal : animais) {
+            copia.add(new Animal(
+                animal.getNome(),
+                animal.getPeso(),
+                animal.getPorte(),
+                animal.getEspecie(),    
+                animal.getRaca(),
+                animal.getSexo()
+            ));
+        }
+        return copia;
     }
 
-    // Faz comparação ignorando maiúsculas/minúsculas(equalsIgnoreCase)
-    // Retorna o objeto Animal se encontrado, ou null caso contrário
+    // Compara o nome dado, ao nome de cada um dos animias cadastrado e retorna uma cópia do objeto Animal que tiver o nome igual ao parâmetro
     public Animal buscarAnimalPorNome(String nome) {
         for (Animal animal : animais) {
             if (animal.getNome().equalsIgnoreCase(nome)) {
-                return animal;
+                // Retorna uma cópia do animal para preservar encapsulamento
+                return new Animal(
+                    animal.getNome(),
+                    animal.getPeso(),
+                    animal.getPorte(),
+                    animal.getEspecie(),
+                    animal.getRaca(),
+                    animal.getSexo()
+                );
             }
         }
         return null;

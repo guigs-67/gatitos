@@ -40,8 +40,9 @@ public class NotaFiscal {
     public Cliente getCliente() {
         return this.cliente;
     }
+    //retornar uma nova lista garante o encapsulamento.
     public List<ItemNota> getItens() {
-        return this.itens;
+        return new ArrayList<>(this.itens);
     }
 
     public BigDecimal getTotalFinal() {

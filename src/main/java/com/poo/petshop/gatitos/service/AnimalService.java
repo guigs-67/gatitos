@@ -128,7 +128,7 @@ public class AnimalService {
                 if (dados.length == 7) {
                     Animal animal = new Animal(
                         dados[1],
-                        Integer.parseInt(dados[2]),
+                        Double.parseDouble(dados[2]),
                         dados[3], 
                         dados[4],
                         dados[5],

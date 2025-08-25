@@ -281,3 +281,51 @@ async function buscarPetsPorCPF() {
         alert('Não foi possível conectar ao servidor.');
     }
 }
+
+// Cadastra o pet e, em caso de sucesso, volta para o menu principal.
+
+async function realizarCadastroPetEVoltar() {
+    // Verifica se temos um CPF de cliente para associar o pet
+    if (!cpfClienteAtual) {
+        alert('Erro: Nenhum cliente selecionado. Por favor, cadastre o cliente primeiro.');
+        goTo('cadastro-cliente');
+        return;
+    }
+
+    // Pega os valores do formulário do pet
+    const nome = document.getElementById('pet-nome').value;
+    const especie = document.getElementById('pet-especie').value;
+    const raca = document.getElementById('pet-raca').value;
+    const porte = document.getElementById('pet-porte').value;
+    const peso = parseInt(document.getElementById('pet-peso').value);
+    const sexo = 'M'; // Assumindo 'M' por padrão
+
+    const animalData = { nome, especie, raca, porte, peso, sexo, cpfDono: cpfClienteAtual };
+
+    try {
+        // Envia os dados para o back-end
+        const response = await fetch('/api/animais', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(animalData)
+        });
+
+        if (response.ok) {
+            alert(`Pet '${nome}' cadastrado com sucesso!`);
+            // Limpa o formulário do pet
+            document.getElementById('pet-nome').value = '';
+            document.getElementById('pet-especie').value = '';
+            document.getElementById('pet-raca').value = '';
+            document.getElementById('pet-porte').value = '';
+            document.getElementById('pet-peso').value = '';
+            
+            // Volta para o menu
+            goTo('menu'); 
+        } else {
+            alert('Erro ao cadastrar o pet.');
+        }
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+        alert('Não foi possível conectar ao servidor.');
+    }
+}

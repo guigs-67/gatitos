@@ -56,6 +56,34 @@ async function realizarCadastroCliente() {
     }
 }
 
+async function salvarAlteracoesCliente(cpfDoCliente) {
+    // Pega os novos dados do formulário de edição
+    const novoNome = document.getElementById('edit-cliente-nome').value;
+    const novoEndereco = document.getElementById('edit-cliente-endereco').value;
+    const novoTelefone = document.getElementById('edit-cliente-telefone').value;
+
+    const dadosAtualizados = { nome: novoNome, endereco: novoEndereco, telefone: novoTelefone };
+
+    try {
+        const response = await fetch(`/api/clientes/${cpfDoCliente}`, { // URL com o CPF
+            method: 'PUT', //  Método para atualizar
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dadosAtualizados)
+        });
+
+        if (response.ok) {
+            alert('Cliente atualizado com sucesso!');
+            // Ex: Voltar para a lista de clientes
+        } else {
+            const mensagemErro = await response.text();
+            alert(mensagemErro);
+        }
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+        alert('Não foi possível conectar ao servidor.');
+    }
+}
+
 async function realizarCadastroPet() {
     // 1. Verifica se temos um CPF de cliente para associar o pet
     if (!cpfClienteAtual) {

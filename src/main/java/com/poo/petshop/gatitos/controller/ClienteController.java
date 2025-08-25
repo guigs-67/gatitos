@@ -24,6 +24,30 @@ public class ClienteController {
         return clienteService.listarClientes();
     }
 
+   // atualizar um cliente usando cpf como parametro
+    @PutMapping("/{cpf}")
+    public ResponseEntity<String> atualizarCliente(@PathVariable String cpf, @RequestBody Cliente dadosAtualizados) {
+        Cliente clienteExistente = clienteService.buscarClientePorCPF(cpf);
+        if (clienteExistente == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente com CPF " + cpf + " não encontrado.");
+        }
+        // guarda o resultado da tentativa de atualização
+        String resultado = clienteService.atualizarCliente(
+            clienteExistente, 
+            dadosAtualizados.getNome(), 
+            dadosAtualizados.getEndereco(), 
+            dadosAtualizados.getTelefone()
+        );
+        // Se o resultado for nulo, deu tudo certo
+        if (resultado == null) {
+            return ResponseEntity.ok().body("Cliente atualizado com sucesso!");
+        } else {
+            // Se deu errado, a String de resultado terá uma resposta de erro
+            return ResponseEntity.badRequest().body(resultado);
+        }
+    }
+
+
     @PostMapping
     public ResponseEntity<String> cadastrarCliente(@RequestBody Cliente cliente) {
         // guarda o resultado da tentativa de cadastramento
@@ -34,6 +58,19 @@ public class ClienteController {
         } else {
             // Se deu errado, a String de resultado terá uma resposta de erro
             return ResponseEntity.badRequest().body(resultado);
+        }
+    }
+    // remover cliente usando cpf como parametro
+     @DeleteMapping("/{cpf}")
+        public ResponseEntity<String> removerCliente(@PathVariable String cpf) {
+             // guarda o resultado da tentativa de remoção
+        String resultado = clienteService.removerCliente(cpf);
+         // Se o resultado for nulo, deu tudo certo
+        if (resultado == null) {
+            return ResponseEntity.ok().body("Cliente removido com sucesso!");
+        } else {
+            // Se deu errado, a String de resultado terá uma resposta de erro
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultado);
         }
     }
 }

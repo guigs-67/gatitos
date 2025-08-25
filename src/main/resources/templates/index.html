@@ -118,20 +118,20 @@
     </section>
 
     <section id="cpf">
-        <div class="back" onclick="goTo('servicoMenu')">⬅</div>
-        <h1 class="title">CPF</h1>
-        <input class="input" placeholder="Insira o CPF do cliente" maxlength="14">
-        <div class="btn-rect" onclick="goTo('pets')">Continuar</div>
-        <p style="font-size:20px;">Dica: use 111.111.111-11 ou 222.222.222-22 para ver exemplos.</p>
-    </section>
+    	<div class="back" onclick="goTo('servicoMenu')">⬅</div>
+    	<h1 class="title">CPF</h1>
+    	<input id="cpf-busca" class="input" placeholder="Insira o CPF do cliente" maxlength="14">
+    	<div class="btn-rect" onclick="buscarPetsPorCPF()">Continuar</div>
+    	<p style="font-size:20px;">Dica: cadastre um cliente e use o CPF dele aqui.</p>
+	</section>
 
     <section id="pets">
-        <div class="back" onclick="goTo('cpf')">⬅</div>
-        <h1 class="title">PETS</h1>
-        <p style="font-size:28px;">Selecione o pet que irá realizar o serviço:</p>
-        <div class="options">
-        </div>
-    </section>
+    	<div class="back" onclick="goTo('cpf')">⬅</div>
+    	<h1 class="title">PETS</h1>
+    	<p style="font-size:28px;">Selecione o pet que irá realizar o serviço:</p>
+    	<div id="pets-container" class="options">
+        	</div>
+	</section>
     
     <section id="nota">
         <div class="back" onclick="goTo('menu')">⬅</div>

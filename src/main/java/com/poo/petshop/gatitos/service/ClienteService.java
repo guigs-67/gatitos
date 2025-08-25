@@ -21,11 +21,44 @@ public class ClienteService {
         this.clientes = new ArrayList<>();
         carregarClientesDoArquivo();
     }
+    
+    // Valida um CPF, verificando se não é nulo, vazio e se possui 11 dígitos.
+    private void validarCPF(String cpf) throws IOException {
+        if (cpf == null || cpf.trim().isEmpty()) {
+            throw new IOException("O CPF não pode ser nulo ou vazio.");
+        }
+        // Remove caracteres diferentes de 0-9 para facilitar a validação evitando ler coisas como '.' ou '-'
+        String cpfNumerico = cpf.replaceAll("[^0-9]", "");
+        
+        if (cpfNumerico.length() != 11) {
+            throw new IOException("O CPF deve conter exatamente 11 dígitos. Valor recebido: " + cpf);
+        }
+    }
+    
+    // Verifica se um CPF já está cadastrado no sistema para evitar duplicidade.
+    private void verificarCPFDuplicado(String cpf) throws IOException {
+        if (buscarClientePorCPF(cpf) != null) {
+            throw new IOException("Já existe um cliente cadastrado com o CPF: " + cpf);
+        }
+    }
 
-    public void cadastrarCliente(Cliente cliente) {
+
+    public String cadastrarCliente(Cliente cliente) {
+    try {
+        // Valida o CPF antes de cadastrar
+        validarCPF(cliente.getCPF());
+        verificarCPFDuplicado(cliente.getCPF());
+
         clientes.add(cliente);
         salvarClientesNoArquivo();
+        
+        return null; 
+        
+    } catch (IOException e) {
+        // caso tenha algum erro ele retornará
+        return e.getMessage(); // << IMPORTANTE: Retorna a String de erro em caso de FALHA
     }
+}
 
     public void atualizarCliente(Cliente clienteExistente, String novoNome, String novoEndereco, String novoTelefone) {
         clienteExistente.setNome(novoNome);
@@ -39,14 +72,17 @@ public class ClienteService {
         if (cliente != null) {
             clientes.remove(cliente);
             salvarClientesNoArquivo();
+        } else {
+            System.err.println("Erro ao remover: Cliente com CPF " + cpf + " não encontrado.");
         }
     }
 
     public List<Cliente> listarClientes() {
-        return new ArrayList<>(clientes); // Retorna uma cópia para proteger a lista original
+        return new ArrayList<>(clientes);
     }
 
     public Cliente buscarClientePorCPF(String cpf) {
+        if (cpf == null) return null;
         for (Cliente cliente : clientes) {
             if (cliente.getCPF().equals(cpf)) {
                 return cliente;
@@ -55,7 +91,8 @@ public class ClienteService {
         return null;
     }
 
-    private void salvarClientesNoArquivo() { // Escreve a lista de clientes no arquivo
+
+    private void salvarClientesNoArquivo() {
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(ARQUIVO_CLIENTES), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
             for (Cliente cliente : clientes) {
                 String linha = String.join(";", cliente.getCPF(), cliente.getNome(), cliente.getEndereco(), cliente.getTelefone());

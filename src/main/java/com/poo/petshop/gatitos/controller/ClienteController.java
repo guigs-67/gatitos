@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.poo.petshop.gatitos.model.Cliente.Cliente;
 import com.poo.petshop.gatitos.service.ClienteService;
 
-@RestController // Transforma a classe em um Controller Web
-@RequestMapping("/api/clientes") // Define a URL base para todos os métodos desta classe
+@RestController
+@RequestMapping("/api/clientes")
 public class ClienteController {
     
     private final ClienteService clienteService;
@@ -18,20 +18,22 @@ public class ClienteController {
         this.clienteService = clienteService;
     }
 
-    // Método para listar todos os clientes
-    @GetMapping // Responde a requisições GET para "/api/clientes"
+    // Método para listar todos os clientes (permanece o mesmo)
+    @GetMapping
     public List<Cliente> listarClientes() {
-        // O Spring converterá esta lista em JSON automaticamente
         return clienteService.listarClientes();
     }
-    
-    // Método para cadastrar um novo cliente
-    @PostMapping // Responde a requisições POST para "/api/clientes"
-    public ResponseEntity<Cliente> cadastrarCliente(@RequestBody Cliente cliente) {
-        // A anotação @RequestBody converte o JSON vindo do front-end em um objeto Cliente
-        clienteService.cadastrarCliente(cliente);
-        
-        // Retorna o cliente salvo e o status HTTP 201 (Created)
-        return new ResponseEntity<>(cliente, HttpStatus.CREATED);
+
+    @PostMapping
+    public ResponseEntity<String> cadastrarCliente(@RequestBody Cliente cliente) {
+        // guarda o resultado da tentativa de cadastramento
+        String resultado = clienteService.cadastrarCliente(cliente);
+        // Se o resultado for nulo, deu tudo certo
+        if (resultado == null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("Cliente cadastrado com sucesso!");
+        } else {
+            // Se deu errado, a String de resultado terá uma resposta de erro
+            return ResponseEntity.badRequest().body(resultado);
+        }
     }
 }

@@ -21,7 +21,6 @@ async function realizarCadastroCliente() {
     const telefone = document.getElementById('cliente-telefone').value;
     const cpf = document.getElementById('cliente-cpf').value;
 
-    // Armazena o CPF na variável global antes de enviar
     cpfClienteAtual = cpf;
 
     const clienteData = { nome, endereco, telefone, cpf, animais: [] };
@@ -42,13 +41,81 @@ async function realizarCadastroCliente() {
             document.getElementById('cliente-cpf').value = '';
             goTo('cadastro-pet');
         } else {
-            alert('Erro ao cadastrar cliente.');
+            //Lê a resposta de erro como texto
+            const mensagemErro = await response.text();
+            
+            // Exibe a mensagem específica a depender do erro
+            alert(mensagemErro);
+            
             cpfClienteAtual = ''; // Limpa o CPF em caso de erro
         }
     } catch (error) {
         console.error('Erro na requisição:', error);
         alert('Não foi possível conectar ao servidor.');
         cpfClienteAtual = ''; // Limpa o CPF em caso de erro
+    }
+}
+
+
+// busca um cliente através de seu cpf para poder atualiza-lo
+async function buscarClienteParaAtualizar() {
+    const cpf = document.getElementById('cpf-busca-atualizacao').value;
+    if (!cpf) {
+        alert('Por favor, insira um CPF.');
+        return;
+    }
+
+    try {
+        // Usa o endpoint para buscar um cliente específico
+        const response = await fetch(`/api/clientes/${cpf}`);
+
+        if (response.ok) {
+            const cliente = await response.json();
+
+            // Preenche os campos do formulário de edição com os dados encontrados
+            document.getElementById('update-cpf').value = cliente.cpf;
+            document.getElementById('update-nome').value = cliente.nome;
+            document.getElementById('update-endereco').value = cliente.endereco;
+            document.getElementById('update-telefone').value = cliente.telefone;
+
+            // Leva o usuário para a tela de edição, já com os dados preenchidos
+            goTo('atualizar-cliente');
+        } else {
+            alert(`Cliente com CPF ${cpf} não encontrado.`);
+        }
+    } catch (error) {
+        console.error('Erro ao buscar cliente:', error);
+        alert('Não foi possível conectar ao servidor.');
+    }
+}
+
+// 3. Envia os dados atualizados para o backend
+async function realizarAtualizacaoCliente() {
+    // Pega os dados dos campos do formulário de edição
+    const cpf = document.getElementById('update-cpf').value;
+    const nome = document.getElementById('update-nome').value;
+    const endereco = document.getElementById('update-endereco').value;
+    const telefone = document.getElementById('update-telefone').value;
+
+    const dadosAtualizados = { nome, endereco, telefone, cpf };
+
+    try {
+        const response = await fetch(`/api/clientes/${cpf}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dadosAtualizados)
+        });
+
+        if (response.ok) {
+            alert('Cliente atualizado com sucesso!');
+            goTo('menu'); // Volta para o menu principal
+        } else {
+            const mensagemErro = await response.text();
+            alert(mensagemErro);
+        }
+    } catch (error) {
+        console.error('Erro na requisição de atualização:', error);
+        alert('Não foi possível conectar ao servidor.');
     }
 }
 

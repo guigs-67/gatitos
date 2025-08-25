@@ -59,11 +59,11 @@ public class NotaFiscalService {
     return novaNota;
     }
 
-    public NotaFiscal buscarCopiaPorId(int id) {
-        return bancoDeNotas.stream()
-                .filter(nota -> nota.getId() == id)
-                .findFirst()
-                // A API enviará o objeto de dados, então não precisamos mais do construtor de cópia aqui.
-                .orElseThrow(() -> new RuntimeException("ERRO!!! Nota Fiscal com ID: " + id + " não foi encontrada!"));
-    }
+    public NotaFiscal buscarCopiaPorId(int id) {  //proucura uma nota fiscal por id e retorna uma cópia dela
+    return bancoDeNotas.stream()
+        .filter(nota -> nota.getId() == id)
+        .findFirst()
+        .map(NotaFiscal::new)  
+        .orElseThrow(() -> new RuntimeException("ERRO!!! Nota Fiscal com ID: " + id + " não foi encontrada!"));
+}
 }

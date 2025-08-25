@@ -45,14 +45,17 @@
     </section>
 
     <section id="cadastro-cliente">
-        <div class="back" onclick="goTo('cadastramento')">⬅</div>
-        <h1 class="title">CADASTRO DE CLIENTE</h1>
-        <input class="input" placeholder="Nome do Cliente">
-        <input class="input" placeholder="Endereço do Cliente">
-        <input class="input" placeholder="Telefone do Cliente">
-        <input class="input" placeholder="CPF do Cliente">
-        <div class="btn" onclick="goTo('cadastro-pet')"><span>Adicionar Pets</span></div>
     </section>
+	<section id="cadastro-cliente">
+    	<div class="back" onclick="goTo('cadastramento')">⬅</div>
+    	<h1 class="title">CADASTRO DE CLIENTE</h1>
+    	<input id="cliente-nome" class="input" placeholder="Nome do Cliente">
+    	<input id="cliente-endereco" class="input" placeholder="Endereço do Cliente">
+    	<input id="cliente-telefone" class="input" placeholder="Telefone do Cliente">
+    	<input id="cliente-cpf" class="input" placeholder="CPF do Cliente">
+    
+    <div class="btn" onclick="realizarCadastroCliente()"><span>Cadastrar e Adicionar Pets</span></div>
+	</section>
 
     <section id="atualizar-cliente">
         <div class="back" onclick="goTo('cadastramento')">⬅</div>

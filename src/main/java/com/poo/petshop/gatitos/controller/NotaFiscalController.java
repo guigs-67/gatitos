@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/notas-fiscais") 
+@RequestMapping("/api/notas-fiscais")
 public class NotaFiscalController {
 
     private final NotaFiscalService notaFiscalService;
@@ -16,41 +16,50 @@ public class NotaFiscalController {
         this.notaFiscalService = notaFiscalService;
     }
 
-    // Criar uma nova nota fiscal usando um serviço
-    @PostMapping
-    public ResponseEntity<?> criarNotaFiscal(@RequestBody CriarNotaRequest request) {
+    // Inicia a nota fiscal vazia
+    @PostMapping("/iniciar")
+    public ResponseEntity<?> iniciarNotaFiscal(@RequestBody IniciarNotaRequest request) {
         try {
-             // chama a função que incrementa a nota na service
-            NotaFiscal novaNota = notaFiscalService.gerarNotaParaServico(request.getCpfCliente(), request.getServico());
-            // Se tudo der certo, retorna a nota fiscal completa para o Js
-            return ResponseEntity.ok(novaNota); 
+            NotaFiscal novaNota = notaFiscalService.iniciarNotaFiscal(request.getCpfCliente());
+            return ResponseEntity.ok(novaNota);
         } catch (RuntimeException e) {
-        
-            // se der errado, retorna um erro
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    // Buscar uma nota fiscal por ID
+    // Adiciona um serviço a essa nota fiscal 
+    @PostMapping("/{id}/adicionar-servico")
+    public ResponseEntity<?> adicionarServico(@PathVariable int id, @RequestBody AdicionarServicoRequest request) {
+        try {
+            NotaFiscal notaAtualizada = notaFiscalService.adicionarServicoANota(id, request.getServico());
+            return ResponseEntity.ok(notaAtualizada);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // Pega a nota fiscal finalizada para exibi-la
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarNotaPorId(@PathVariable int id) {
         try {
             NotaFiscal nota = notaFiscalService.buscarCopiaPorId(id);
             return ResponseEntity.ok(nota);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage()); // nada foi encontrado
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 }
 
 // feito apenas para servir como uma DTO(um jeito organizado de passar os dados) para o front, pra facilitar a exposição desses dados
-class CriarNotaRequest {
-    private String cpfCliente;
-    private String servico;
 
-    // Getters e Setters
+class IniciarNotaRequest {
+    private String cpfCliente;
     public String getCpfCliente() { return cpfCliente; }
     public void setCpfCliente(String cpfCliente) { this.cpfCliente = cpfCliente; }
+}
+
+class AdicionarServicoRequest {
+    private String servico;
     public String getServico() { return servico; }
     public void setServico(String servico) { this.servico = servico; }
 }

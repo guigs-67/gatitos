@@ -23,47 +23,54 @@ public class NotaFiscalService {
     }
 
     private NotaFiscal criar(Cliente cliente) {
-    //cria uma nova nota fiscal
-    NotaFiscal novaNota = new NotaFiscal(cliente);
-    
-    // atribui o id dela,usando o próximo diponível
-    novaNota.setId(proximoId);
-    
-    // adiciona em uma lista em memória
-    bancoDeNotas.add(novaNota); 
-    
-    // 4. Incrementa o contador para o próximo ID
-    proximoId++;
-    
-    //Retorna a nota que acabamos de criar e salvar
-    return novaNota;
-}
-
-    //gerar nota fiscal pegando o cliente que esta comprando e quais serviços ele está comprando
-    public NotaFiscal gerarNotaParaServico(String cpfCliente, String nomeServico) {
-    Cliente cliente = clienteService.buscarClientePorCPF(cpfCliente);
-    if (cliente == null) {
-        throw new RuntimeException("Cliente com CPF " + cpfCliente + " não foi localizado.");
+        //cria uma nova nota fiscal
+        NotaFiscal novaNota = new NotaFiscal(cliente);
+        
+        // atribui o id dela,usando o próximo diponível
+        novaNota.setId(proximoId);
+        
+        // adiciona em uma lista em memória
+        bancoDeNotas.add(novaNota); 
+        
+        // Incrementa o contador para o próximo ID
+        proximoId++;
+        
+        //Retorna a nota que acabamos de criar e salvar
+        return novaNota;
     }
 
-    //pega o serviço solicitado
-    Servicos servico = servicosService.buscarServicoPorNome(nomeServico);
-     
-    //cria uma nota fiscal
-    NotaFiscal novaNota = this.criar(cliente);
 
-    //pega o serviço que pegamos e põe na nota
-    novaNota.adicionarServico(servico);
-
-    // retorna a nota
-    return novaNota;
+       // inicia a nota fiscal vazia
+    public NotaFiscal iniciarNotaFiscal(String cpfCliente) {
+        Cliente cliente = clienteService.buscarClientePorCPF(cpfCliente);
+        if (cliente == null) {
+            throw new RuntimeException("Cliente com CPF " + cpfCliente + " não foi localizado para iniciar a nota.");
+        }
+        // usa o método para criar a nota, buscando o cpf do cliente
+        return this.criar(cliente);
     }
 
-    public NotaFiscal buscarCopiaPorId(int id) {  //proucura uma nota fiscal por id e retorna uma cópia dela
-    return bancoDeNotas.stream()
-        .filter(nota -> nota.getId() == id)
-        .findFirst()
-        .map(NotaFiscal::new)  
-        .orElseThrow(() -> new RuntimeException("ERRO!!! Nota Fiscal com ID: " + id + " não foi encontrada!"));
-}
+    //adiciona um serviço a nota fiscal ja existente, incrementando ela
+    public NotaFiscal adicionarServicoANota(int idNota, String nomeServico) {
+        // Modifica a lista original
+        NotaFiscal notaParaAtualizar = bancoDeNotas.stream()
+                .filter(nota -> nota.getId() == idNota)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Nota Fiscal com ID: " + idNota + " não foi encontrada!"));
+
+        // método para buscar o nome do serviço e o utilizar na nota 
+        Servicos servico = servicosService.buscarServicoPorNome(nomeServico);
+        notaParaAtualizar.adicionarServico(servico);
+        
+        return notaParaAtualizar;
+    }
+
+
+    public NotaFiscal buscarCopiaPorId(int id) { //proucura uma nota fiscal por id e retorna uma cópia dela
+        return bancoDeNotas.stream()
+            .filter(nota -> nota.getId() == id)
+            .findFirst()
+            .map(NotaFiscal::new)  
+            .orElseThrow(() -> new RuntimeException("ERRO!!! Nota Fiscal com ID: " + id + " não foi encontrada!"));
+    }
 }

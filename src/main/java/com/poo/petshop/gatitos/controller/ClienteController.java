@@ -1,74 +1,37 @@
 package com.poo.petshop.gatitos.controller;
 
 import java.util.List;
-import java.util.Scanner;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import com.poo.petshop.gatitos.model.Cliente.Cliente;
 import com.poo.petshop.gatitos.service.ClienteService;
 
+@RestController // Transforma a classe em um Controller Web
+@RequestMapping("/api/clientes") // Define a URL base para todos os métodos desta classe
 public class ClienteController {
     
-    private ClienteService clienteService;
-    private Scanner sc;
+    private final ClienteService clienteService;
 
-    public ClienteController() { 
-        this.clienteService = new ClienteService(); // Cria a instância do Service
-        this.sc = new Scanner(System.in);
+    public ClienteController(ClienteService clienteService) { 
+        this.clienteService = clienteService;
     }
 
-    public void cadastrarCliente() {
-    	// 1. Pede e lê cada informação do usuário, uma por uma.
-        System.out.print("Digite o CPF do cliente: ");
-        String cpf = sc.nextLine();
-        System.out.print("Digite o endereço do cliente: ");
-        String endereco = sc.nextLine();
-        System.out.print("Digite o telefone do cliente: ");
-        String telefone = sc.nextLine();
-        System.out.print("Digite o nome do cliente: ");
-        String nome = sc.nextLine();
-
-        Cliente novoCliente = new Cliente(cpf, endereco, telefone, nome);
-        clienteService.cadastrarCliente(novoCliente); // Encarrega a ação para o Service
-        
-        System.out.println("Cliente cadastrado com sucesso!");
-    }
-
+    // Método para listar todos os clientes
+    @GetMapping // Responde a requisições GET para "/api/clientes"
     public List<Cliente> listarClientes() {
-        return clienteService.listarClientes(); // Manda para o Service e retorna a lista
+        // O Spring converterá esta lista em JSON automaticamente
+        return clienteService.listarClientes();
     }
     
-    public Cliente buscarClientePorCPF(String cpf) {
-        Cliente cliente = clienteService.buscarClientePorCPF(cpf);
-        if (cliente == null) {
-            System.out.println("Cliente não encontrado.");
-        }
-        return cliente;
-    }
-    
-    public void atualizarCliente(String cpf) {
-        Cliente cliente = clienteService.buscarClientePorCPF(cpf);
-        if (cliente != null) {
-            System.out.print("Digite o novo endereço do cliente: ");
-            String endereco = sc.nextLine();
-            System.out.print("Digite o novo telefone do cliente: ");
-            String telefone = sc.nextLine();
-            System.out.print("Digite o novo nome do cliente: ");
-            String nome = sc.nextLine();
-
-            clienteService.atualizarCliente(cliente, nome, endereco, telefone); // Encarrega para o Service
-            System.out.println("Cliente atualizado com sucesso!");
-        } 
-        else {
-            System.out.println("Cliente não encontrado.");
-        }
-    }
-    
-    public void removerCliente(String cpf) {
-        if (clienteService.buscarClientePorCPF(cpf) != null) {
-            clienteService.removerCliente(cpf);
-            System.out.println("Cliente removido com sucesso!");
-        } 
-        else {
-            System.out.println("Cliente não encontrado.");
-        }
+    // Método para cadastrar um novo cliente
+    @PostMapping // Responde a requisições POST para "/api/clientes"
+    public ResponseEntity<Cliente> cadastrarCliente(@RequestBody Cliente cliente) {
+        // A anotação @RequestBody converte o JSON vindo do front-end em um objeto Cliente
+        clienteService.cadastrarCliente(cliente);
+        
+        // Retorna o cliente salvo e o status HTTP 201 (Created)
+        return new ResponseEntity<>(cliente, HttpStatus.CREATED);
     }
 }

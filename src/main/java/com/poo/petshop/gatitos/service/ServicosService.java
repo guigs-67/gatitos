@@ -1,6 +1,7 @@
 package com.poo.petshop.gatitos.service;
 
 import com.poo.petshop.gatitos.model.Serviços.Estetico;
+import com.poo.petshop.gatitos.model.Serviços.PacoteDeServicos;
 import com.poo.petshop.gatitos.model.Serviços.Saude;
 import com.poo.petshop.gatitos.model.Serviços.Servicos;
 import java.math.BigDecimal;
@@ -18,17 +19,46 @@ public class ServicosService {
         inicializarCatalogo();
     }
 
-    // Cria o catálogo de serviços fixos do petshop
     private void inicializarCatalogo() {
-        catalogoServicos.add(new Estetico("Banho", new BigDecimal("0"), true, false));
-        catalogoServicos.add(new Estetico("Tosa", new BigDecimal("0"), false, true));
-        catalogoServicos.add(new Estetico("Banho e Tosa", new BigDecimal("0"), true, true));
-        catalogoServicos.add(new Saude("Consulta Geral", new BigDecimal("0"), true, false));
-        catalogoServicos.add(new Saude("Aplicação de Vacina", new BigDecimal("0"), false, true));
+        // Serviços criados usando os métodos de factory
+        catalogoServicos.add(criarServicoEstetico("Banho", BigDecimal.ZERO, true, false));
+        catalogoServicos.add(criarServicoEstetico("Tosa", BigDecimal.ZERO, false, true));
+        catalogoServicos.add(criarServicoEstetico("Banho e Tosa", BigDecimal.ZERO, true, true));
+        catalogoServicos.add(criarServicoSaude("Consulta Geral", BigDecimal.ZERO, true, false));
+        catalogoServicos.add(criarServicoSaude("Aplicação de Vacina", BigDecimal.ZERO, false, true));
+        
+        // Adiciona o pacote pré-definido ao catálogo
+        catalogoServicos.add(montarPacoteDiaDeSpa());
     }
 
-    // Retorna uma lista de todos os serviços disponíveis.
     public List<Servicos> listarServicosDisponiveis() {
         return new ArrayList<>(catalogoServicos);
+    }
+    
+    // Monta um pacote de serviços "Dia de Spa" usando o padrão Composite.
+    public PacoteDeServicos montarPacoteDiaDeSpa() {
+        // Cria o pacote
+        PacoteDeServicos pacoteSpa = new PacoteDeServicos("Pacote Dia de Spa");
+
+        // Cria os serviços individuais usando os métodos desta classe
+        Servicos banho = criarServicoEstetico("Banho Premium", BigDecimal.ZERO, true, false);
+        Servicos tosa = criarServicoEstetico("Tosa Especial", BigDecimal.ZERO, false, true);
+
+        // Adiciona os serviços ao pacote
+        pacoteSpa.adicionar(banho);
+        pacoteSpa.adicionar(tosa);
+
+        return pacoteSpa;
+    }
+
+    // Métodos de Criação (Factory Methods)
+    // Cria uma instância de um serviço Estético.
+    private Servicos criarServicoEstetico(String nome, BigDecimal precoBase, boolean incluiBanho, boolean incluiTosa) {
+        return new Estetico(nome, precoBase, incluiBanho, incluiTosa);
+    }
+
+    // Cria uma instância de um serviço de Saúde.
+    private Servicos criarServicoSaude(String nome, BigDecimal precoBase, boolean consultaEspecialista, boolean vacina) {
+        return new Saude(nome, precoBase, consultaEspecialista, vacina);
     }
 }

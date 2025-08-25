@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PetCare - Sistema de Gestão</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
@@ -21,7 +19,7 @@
             <div class="btn" onclick="goTo('cadastramento')">
                 <span>Cadastrar / Atualizar Cliente</span>
             </div>
-            <div class="btn" onclick="goTo('servicoMenu')">
+            <div class="btn" onclick="goTo('cpf')">
                 <span>Realizar Serviço</span>
             </div>
             <div class="btn" onclick="goTo('nota')">
@@ -31,19 +29,19 @@
     </section>
 
     <section id="cadastramento">
-    <div class="back" onclick="goTo('menu')">⬅</div>
-    <h1 class="title">CADASTRAMENTO</h1>
-    <div class="logo">
-        <img src="/LogoPETCARE.png" alt="Logo PetCare">
-        <h2>PETCARE</h2>
-    </div>
-    <p style="font-size:28px;">O que deseja?</p>
-    <div class="options">
-        <div class="btn" onclick="goTo('cadastro-cliente')"><span>Cadastrar Cliente</span></div>
-        <div class="btn" onclick="goTo('busca-cliente-para-atualizar')"><span>Atualizar Cadastro</span></div>
-        <div class="btn btn-danger" onclick="listarClientesParaRemover()"><span>Remover Cliente</span></div>
-    </div>
-</section>
+        <div class="back" onclick="goTo('menu')">⬅</div>
+        <h1 class="title">CADASTRAMENTO</h1>
+        <div class="logo">
+            <img src="/LogoPETCARE.png" alt="Logo PetCare">
+            <h2>PETCARE</h2>
+        </div>
+        <p style="font-size:28px;">O que deseja?</p>
+        <div class="options">
+            <div class="btn" onclick="goTo('cadastro-cliente')"><span>Cadastrar Cliente</span></div>
+            <div class="btn" onclick="goTo('busca-cliente-para-atualizar')"><span>Atualizar Cadastro</span></div>
+            <div class="btn btn-danger" onclick="listarClientesParaRemover()"><span>Remover Cliente</span></div>
+        </div>
+    </section>
 
     <section id="cadastro-cliente">
         <div class="back" onclick="goTo('cadastramento')">⬅</div>
@@ -54,39 +52,30 @@
         <input id="cliente-cpf" class="input" placeholder="CPF do Cliente">
         <div class="btn" onclick="realizarCadastroCliente()"><span>Adicionar Pets</span></div>
     </section>
-
-  <section id="busca-cliente-para-atualizar">
-    <div class="back" onclick="goTo('cadastramento')">⬅</div>
-    <h1 class="title">ATUALIZAR CADASTRO</h1>
-    <p style="font-size:28px;">Digite o CPF do cliente que deseja atualizar:</p>
+    <section id="busca-cliente-para-atualizar">
+        <div class="back" onclick="goTo('cadastramento')">⬅</div>
+        <h1 class="title">ATUALIZAR CADASTRO</h1>
+        <p style="font-size:28px;">Digite o CPF do cliente que deseja atualizar:</p>
+        <input id="cpf-busca-atualizacao" class="input" placeholder="CPF do Cliente">
+        <div class="btn-rect" onclick="buscarClienteParaAtualizar()">Buscar Cliente</div>
+    </section>
+    <section id="lista-clientes-para-remover">
+        <div class="back" onclick="goTo('cadastramento')">⬅</div>
+        <h1 class="title">REMOVER CLIENTE</h1>
+        <p style="font-size:28px;">Selecione o cliente que deseja remover:</p>
+        <div id="container-lista-clientes-remover" class="options"></div>
+    </section>
+    <section id="atualizar-cliente">
+        <div class="back" onclick="goTo('busca-cliente-para-atualizar')">⬅</div>
+        <h1 class="title">EDITANDO CLIENTE</h1>
+        <input id="update-cpf" class="input" placeholder="CPF do Cliente" readonly>
+        <input id="update-nome" class="input" placeholder="Atualizar Nome">
+        <input id="update-endereco" class="input" placeholder="Atualizar Endereço">
+        <input id="update-telefone" class="input" placeholder="Atualizar Telefone">
+        <div class="btn" onclick="goTo('cadastro-pet')"><span>Atualizar Pets?</span></div>
+        <div class="btn-rect" onclick="realizarAtualizacaoCliente()">Salvar Alterações</div>
+    </section>
     
-    <input id="cpf-busca-atualizacao" class="input" placeholder="CPF do Cliente">
-    
-    <div class="btn-rect" onclick="buscarClienteParaAtualizar()">Buscar Cliente</div>
-</section>
-
-<section id="lista-clientes-para-remover">
-    <div class="back" onclick="goTo('cadastramento')">⬅</div>
-    <h1 class="title">REMOVER CLIENTE</h1>
-    <p style="font-size:28px;">Selecione o cliente que deseja remover:</p>
-
-    <div id="container-lista-clientes-remover" class="options">
-        </div>
-</section>
-
-   <section id="atualizar-cliente">
-    <div class="back" onclick="goTo('busca-cliente-para-atualizar')">⬅</div>
-    <h1 class="title">EDITANDO CLIENTE</h1>
-    
-    <input id="update-cpf" class="input" placeholder="CPF do Cliente" readonly> 
-    <input id="update-nome" class="input" placeholder="Atualizar Nome">
-    <input id="update-endereco" class="input" placeholder="Atualizar Endereço">
-    <input id="update-telefone" class="input" placeholder="Atualizar Telefone">
-    
-    <div class="btn" onclick="goTo('cadastro-pet')"><span>Atualizar Pets?</span></div>
-    <div class="btn-rect" onclick="realizarAtualizacaoCliente()">Salvar Alterações</div>
-</section>
-
     <section id="cadastro-pet">
         <div class="back" onclick="goTo('cadastramento')">⬅</div>
         <h1 class="title">CADASTRO DE PETS</h1>
@@ -104,14 +93,25 @@
         <div class="btn-rect" onclick="goTo('menu')">Cadastrar Pet e Voltar ao Menu</div>
     </section>
 
-    <section id="servicoMenu">
+    <section id="cpf">
         <div class="back" onclick="goTo('menu')">⬅</div>
-        <h1 class="title">SERVIÇOS</h1>
-        <div class="logo">
-            <img src="/LogoPETCARE.png" alt="Logo PetCare">
-            <h2>PETCARE</h2>
-        </div>
-        <p style="font-size:28px;">O que deseja?</p>
+        <h1 class="title">REALIZAR SERVIÇO</h1>
+        <p style="font-size:28px;">Passo 1: Digite o CPF do cliente</p>
+        <input id="cpf-busca" class="input" placeholder="Insira o CPF do cliente" maxlength="14">
+        <div class="btn-rect" onclick="buscarPetsPorCPF()">Continuar para Pets</div>
+    </section>
+
+    <section id="pets">
+        <div class="back" onclick="goTo('cpf')">⬅</div>
+        <h1 class="title">REALIZAR SERVIÇO</h1>
+        <p style="font-size:28px;">Passo 2: Selecione o pet</p>
+        <div id="pets-container" class="options"></div>
+    </section>
+
+    <section id="servicoMenu">
+        <div class="back" onclick="goTo('pets')">⬅</div>
+        <h1 class="title">REALIZAR SERVIÇO</h1>
+        <p style="font-size:28px;">Passo 3: Escolha a categoria</p>
         <div class="options">
             <div class="btn" onclick="goTo('estetica')"><span>Estética</span></div>
             <div class="btn" onclick="goTo('saude')"><span>Saúde</span></div>
@@ -120,75 +120,60 @@
 
     <section id="estetica">
         <div class="back" onclick="goTo('servicoMenu')">⬅</div>
-        <h1 class="title">ESTÉTICA</h1>
-        <p style="font-size:28px;">O que deseja?</p>
+        <h1 class="title">SERVIÇO DE ESTÉTICA</h1>
+        <p style="font-size:28px;">Passo 4: Escolha o Serviço</p>
         <div class="options">
-            <div class="btn" onclick="goTo('cpf')"><span>Banho</span></div>
-            <div class="btn" onclick="goTo('cpf')"><span>Tosa</span></div>
+            <div class="btn" onclick="selecionarServico('Banho')"><span>Banho</span></div>
+            <div class="btn" onclick="selecionarServico('Tosa')"><span>Tosa</span></div>
+            <div class="btn" onclick="selecionarServico('Banho e Tosa')"><span>Banho e Tosa</span></div>
         </div>
     </section>
 
     <section id="saude">
         <div class="back" onclick="goTo('servicoMenu')">⬅</div>
-        <h1 class="title">SAÚDE</h1>
-        <p style="font-size:28px;">O que deseja?</p>
+        <h1 class="title">SERVIÇO DE SAÚDE</h1>
+        <p style="font-size:28px;">Passo 4: Escolha o Serviço</p>
         <div class="options">
-            <div class="btn" onclick="goTo('cpf')"><span>Consulta</span></div>
-            <div class="btn" onclick="goTo('cpf')"><span>Vacinação</span></div>
+            <div class="btn" onclick="selecionarServico('Consulta Geral')"><span>Consulta</span></div>
+            <div class="btn" onclick="selecionarServico('Aplicação de Vacina')"><span>Vacinação</span></div>
         </div>
     </section>
 
-    <section id="cpf">
-    	<div class="back" onclick="goTo('servicoMenu')">⬅</div>
-    	<h1 class="title">CPF</h1>
-    	<input id="cpf-busca" class="input" placeholder="Insira o CPF do cliente" maxlength="14">
-    	<div class="btn-rect" onclick="buscarPetsPorCPF()">Continuar</div>
-    	<p style="font-size:20px;">Dica: cadastre um cliente e use o CPF dele aqui.</p>
-	</section>
-
-    <section id="pets">
-    	<div class="back" onclick="goTo('cpf')">⬅</div>
-    	<h1 class="title">PETS</h1>
-    	<p style="font-size:28px;">Selecione o pet que irá realizar o serviço:</p>
-    	<div id="pets-container" class="options">
-        	</div>
-	</section>
-    
-    <section id="nota">
-        <div class="back" onclick="goTo('menu')">⬅</div>
-        <div class="header">
-             <img src="/LogoPETCARE.png" alt="Logo PetCare">
-            <h1>Emissão de Nota</h1>
+   <section id="nota">
+    <div class="back" onclick="goTo('menu')">⬅</div>
+    <div class="header">
+        <img src="/LogoPETCARE.png" alt="Logo PetCare">
+        <h1>Emissão de Nota</h1>
+    </div>
+    <div class="nota-container">
+        <div class="nota" id="notaFiscal">
+            <h2>PetCare Brasil Comercial</h2>
+            <p>CNPJ - 00.000.000/0000-00</p>
+            <h3>Nota Fiscal Eletrônica</h3>
+            <hr>
+            <table class="tabela">
+                <thead>
+                    <tr>
+                        <th>Serviço</th>
+                        <th>Qtd</th>
+                        <th>Valor Un</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-servicos">
+                </tbody>
+            </table>
+            <hr>
+            <p><strong>Qtd total de itens:</strong> <span id="qtdTotal"></span></p>
+            <p><strong>Valor total:</strong> R$ <span id="valorTotal"></span></p>
+            <hr>
+            <p><strong>Consumidor - CPF:</strong> <span id="cpf-nota"></span></p>
+            <p><strong>Data:</strong> <span id="data-nota"></span></p>
+            <p><strong>ID da Nota:</strong> <span id="idNota"></span></p>
         </div>
-        <div class="nota-container">
-            <div class="nota" id="notaFiscal">
-                <h2>PetCare Brasil Comercial</h2>
-                <p>CNPJ - 00.000.000/0000-00</p>
-                <h3>Nota Fiscal Eletrônica</h3>
-                <hr>
-                <table class="tabela">
-                    <thead>
-                        <tr>
-                            <th>Serviço</th>
-                            <th>Qtd</th>
-                            <th>Valor Un</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabela-servicos">
-                    </tbody>
-                </table>
-                <hr>
-                <p><strong>Qtd total de itens:</strong> <span id="qtdTotal"></span></p>
-                <p><strong>Valor total:</strong> R$ <span id="valorTotal"></span></p>
-                <hr>
-                <p><strong>Consumidor - CPF:</strong> <span id="cpf-nota"></span></p>
-                <p><strong>Data:</strong> <span id="data-nota"></span></p>
-                <p><strong>ID da Nota:</strong> <span id="idNota"></span></p>
-            </div>
-            <button class="btn imprimir">Imprimir</button>
-        </div>
-    </section>
+        <button class="btn imprimir">Imprimir</button>
+    </div>
+</section>
 
     <script src="/script.js"></script>
 </body>

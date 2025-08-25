@@ -15,6 +15,85 @@ function goTo(id) {
     }
 }
 
+ //função para pegar o nome do serviço que esta sendo selecionado
+function selecionarServico(tipoServico) {
+    // A variável 'cpfClienteAtual' já foi definida quando o usuário buscou o cliente na tela 'cpf'.
+    if (!cpfClienteAtual) {
+        alert("Erro: CPF do cliente não definido. Por favor, comece o fluxo de serviço novamente pela busca de CPF.");
+        goTo('cpf'); // Envia o usuário de volta para a tela de busca de CPF
+        return;
+    }
+    
+    console.log(`Iniciando serviço '${tipoServico}' para o cliente CPF: ${cpfClienteAtual}`);
+    
+    // Chama a função principal que vai se comunicar com o backend
+    gerarNotaFiscal(cpfClienteAtual, tipoServico);
+}
+
+//função para gerar NotaFiscal usando cpf e o serviço selecionado
+async function gerarNotaFiscal(cpf, servico) {
+    // Prepara o objeto de dados para enviar ao backend, como definido naquele pseudo Dto
+    const requestData = {
+        cpfCliente: cpf,
+        servico: servico
+    };
+
+    try {
+        const response = await fetch('/api/notas-fiscais', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestData)
+        });
+
+        if (!response.ok) {
+            const erroMsg = await response.text();
+            throw new Error(erroMsg); // Lança o erro para ser pego pelo bloco catch
+        }
+
+        const notaFiscal = await response.json(); // Recebe a nota fiscal completa do backend
+
+        // Se a chamada foi um sucesso, chama a função para preencher e exibir a nota
+        preencherEExibirNota(notaFiscal);
+
+    } catch (error) {
+        console.error('Erro ao gerar nota fiscal:', error);
+        alert(`Ocorreu um erro: ${error.message}`);
+    }
+}
+
+// Função que pega os objeto criado, e usa seus dados para preencher o html
+function preencherEExibirNota(notaFiscal) {
+    document.getElementById('cpf-nota').textContent = notaFiscal.cliente.cpf;
+    document.getElementById('data-nota').textContent = new Date(notaFiscal.dataHora).toLocaleString('pt-BR');
+    document.getElementById('idNota').textContent = notaFiscal.id;
+    
+    // Preenche a tabela de serviços
+    const tabelaBody = document.getElementById('tabela-servicos');
+    tabelaBody.innerHTML = ''; // Limpa qualquer conteúdo anterior da tabela
+    let quantidadeTotalItens = 0;
+
+    notaFiscal.itens.forEach(item => {
+        const linha = document.createElement('tr');
+        // Cria uma linha na tabela para cada item da nota
+        linha.innerHTML = `
+            <td>${item.descricao}</td>
+            <td>${item.quantidade}</td>
+            <td>R$ ${item.valorUnitario.toFixed(2)}</td>
+            <td>R$ ${item.valorTotal.toFixed(2)}</td>
+        `;
+        tabelaBody.appendChild(linha);
+        quantidadeTotalItens += item.quantidade;
+    });
+
+    // Preenche os totais da nota
+    document.getElementById('qtdTotal').textContent = quantidadeTotalItens;
+    document.getElementById('valorTotal').textContent = notaFiscal.totalFinal.toFixed(2);
+
+    // leva até a nota finalizada
+    goTo('nota');
+}
+
+
 async function realizarCadastroCliente() {
     const nome = document.getElementById('cliente-nome').value;
     const endereco = document.getElementById('cliente-endereco').value;
@@ -234,45 +313,32 @@ async function realizarCadastroPet() {
 
 // Função para buscar pets pelo CPF do cliente
 async function buscarPetsPorCPF() {
-    // Pega o CPF digitado pelo usuário
     const cpf = document.getElementById('cpf-busca').value;
     if (!cpf) {
         alert('Por favor, insira um CPF.');
         return;
     }
-
-    // Armazena o CPF para uso futuro (ao criar a nota fiscal)
     cpfClienteAtual = cpf;
-
     try {
-        // Chama o endpoint do back-end para buscar os animais
-        // A URL corresponde ao @GetMapping("/cliente/{cpf}") no AnimalController
         const response = await fetch(`/api/animais/cliente/${cpf}`);
-
         if (response.ok) {
-            const animais = await response.json(); // Converte a resposta em um array de objetos
-
-            // Pega o contêiner onde os botões dos pets serão exibidos
+            const animais = await response.json();
             const petsContainer = document.getElementById('pets-container');
-            petsContainer.innerHTML = ''; // Limpa qualquer conteúdo anterior
+            petsContainer.innerHTML = '';
 
             if (animais.length > 0) {
-                // Para cada animal encontrado, cria um botão
                 animais.forEach(animal => {
                     const petButton = document.createElement('div');
                     petButton.className = 'btn';
-                    // Futuramente, este onclick irá para a seleção de serviço
-                    petButton.onclick = () => alert(`Você selecionou ${animal.nome}`); 
+                    // A MÁGICA ESTÁ AQUI: O clique chama a função 'selecionarPetParaServico'
+                    petButton.onclick = () => selecionarPetParaServico(animal); 
                     petButton.innerHTML = `<span>${animal.nome}<br><small>(${animal.raca})</small></span>`;
                     petsContainer.appendChild(petButton);
                 });
             } else {
                 petsContainer.innerHTML = '<p style="font-size:28px;">Nenhum pet encontrado para este CPF.</p>';
             }
-
-            // Leva o usuário para a tela de seleção de pets
             goTo('pets');
-
         } else {
             alert('Cliente não encontrado ou erro ao buscar pets.');
         }
@@ -280,4 +346,14 @@ async function buscarPetsPorCPF() {
         console.error('Erro de rede ao buscar pets:', error);
         alert('Não foi possível conectar ao servidor.');
     }
+}
+
+// Ela é chamada pelo clique no botão do pet.
+function selecionarPetParaServico(animal) {
+    // Primeiro, ela salva qual pet foi escolhido
+    petSelecionado = animal; 
+    console.log("Pet selecionado:", petSelecionado);
+    
+    // Depois, ela te leva para a tela do menu de serviços.
+    goTo('servicoMenu');
 }

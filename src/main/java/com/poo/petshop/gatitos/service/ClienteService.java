@@ -69,8 +69,6 @@ public class ClienteService {
         }
     }
 
-
-
     public String cadastrarCliente(Cliente cliente) {
     try {
         // Valida o CPF,nome e endereço antes de cadastrar

@@ -15,6 +15,39 @@ function goTo(id) {
     }
 }
 
+// Função que pega os objeto criado, e usa seus dados para preencher o html
+function preencherEExibirNota(notaFiscal) {
+    document.getElementById('cpf-nota').textContent = notaFiscal.cliente.cpf;
+    document.getElementById('data-nota').textContent = new Date(notaFiscal.dataHora).toLocaleString('pt-BR');
+    document.getElementById('idNota').textContent = notaFiscal.id;
+    
+    // Preenche a tabela de serviços
+    const tabelaBody = document.getElementById('tabela-servicos');
+    tabelaBody.innerHTML = ''; // Limpa qualquer conteúdo anterior da tabela
+    let quantidadeTotalItens = 0;
+
+    notaFiscal.itens.forEach(item => {
+        const linha = document.createElement('tr');
+        // Cria uma linha na tabela para cada item da nota
+        linha.innerHTML = `
+            <td>${item.descricao}</td>
+            <td>${item.quantidade}</td>
+            <td>R$ ${item.valorUnitario.toFixed(2)}</td>
+            <td>R$ ${item.valorTotal.toFixed(2)}</td>
+        `;
+        tabelaBody.appendChild(linha);
+        quantidadeTotalItens += item.quantidade;
+    });
+
+    // Preenche os totais da nota
+    document.getElementById('qtdTotal').textContent = quantidadeTotalItens;
+    document.getElementById('valorTotal').textContent = notaFiscal.totalFinal.toFixed(2);
+
+    // leva até a nota finalizada
+    goTo('nota');
+}
+
+
 async function realizarCadastroCliente() {
     const nome = document.getElementById('cliente-nome').value;
     const endereco = document.getElementById('cliente-endereco').value;
@@ -55,6 +88,75 @@ async function realizarCadastroCliente() {
         cpfClienteAtual = ''; // Limpa o CPF em caso de erro
     }
 }
+
+// Função  para criar a nota e guardar o seu id
+async function _iniciarNotaFiscal(cpf) {
+    try {
+        const response = await fetch('/api/notas-fiscais/iniciar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cpfCliente: cpf })
+        });
+        if (!response.ok) {
+            const erroMsg = await response.text();
+            throw new Error(erroMsg);
+        }
+        const novaNota = await response.json();
+        idNotaFiscalAtiva = novaNota.id; // guarda o id da nota
+        console.log(`Nota fiscal #${idNotaFiscalAtiva} iniciada.`);
+        
+        // Leva para o menu de serviços
+        goTo('servicoMenu');
+    } catch (error) {
+        alert(`Erro ao iniciar nota: ${error.message}`);
+        goTo('menu');
+    }
+}
+
+// Função para adicionar serviço na nota
+async function selecionarServico(tipoServico) {
+    if (!idNotaFiscalAtiva) {
+        alert("Erro: Nenhuma nota fiscal ativa. Por favor, reinicie o processo.");
+        return;
+    }
+    try {
+        const response = await fetch(`/api/notas-fiscais/${idNotaFiscalAtiva}/adicionar-servico`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ servico: tipoServico })
+        });
+        if (!response.ok) {
+            const erroMsg = await response.text();
+            throw new Error(erroMsg);
+        }
+        alert(`Serviço '${tipoServico}' adicionado com sucesso!`);
+        // volta para o menu de serviços para o usuário poder adicionar mais
+        goTo('servicoMenu');
+    } catch (error) {
+        alert(`Erro ao adicionar serviço: ${error.message}`);
+    }
+}
+
+// Emite a nota fiscal com seus dados corretos
+async function visualizarNotaFiscalAtiva() {
+    if (!idNotaFiscalAtiva) {
+        alert("Nenhum serviço foi adicionado para emitir a nota.");
+        return;
+    }
+    try {
+        const response = await fetch(`/api/notas-fiscais/${idNotaFiscalAtiva}`);
+        if (!response.ok) {
+            const erroMsg = await response.text();
+            throw new Error(erroMsg);
+        }
+        const notaFiscalFinal = await response.json();
+        preencherEExibirNota(notaFiscalFinal);
+        idNotaFiscalAtiva = null; // Limpa a nota ativa, pois o "carrinho" foi fechado
+    } catch (error) {
+        alert(`Erro ao buscar nota fiscal: ${error.message}`);
+    }
+}
+
 
 
 // busca um cliente através de seu cpf para poder atualiza-lo
@@ -234,45 +336,31 @@ async function realizarCadastroPet() {
 
 // Função para buscar pets pelo CPF do cliente
 async function buscarPetsPorCPF() {
-    // Pega o CPF digitado pelo usuário
     const cpf = document.getElementById('cpf-busca').value;
     if (!cpf) {
         alert('Por favor, insira um CPF.');
         return;
     }
-
-    // Armazena o CPF para uso futuro (ao criar a nota fiscal)
     cpfClienteAtual = cpf;
-
     try {
-        // Chama o endpoint do back-end para buscar os animais
-        // A URL corresponde ao @GetMapping("/cliente/{cpf}") no AnimalController
         const response = await fetch(`/api/animais/cliente/${cpf}`);
-
         if (response.ok) {
-            const animais = await response.json(); // Converte a resposta em um array de objetos
-
-            // Pega o contêiner onde os botões dos pets serão exibidos
+            const animais = await response.json();
             const petsContainer = document.getElementById('pets-container');
-            petsContainer.innerHTML = ''; // Limpa qualquer conteúdo anterior
+            petsContainer.innerHTML = '';
 
             if (animais.length > 0) {
-                // Para cada animal encontrado, cria um botão
                 animais.forEach(animal => {
                     const petButton = document.createElement('div');
                     petButton.className = 'btn';
-                    // Futuramente, este onclick irá para a seleção de serviço
-                    petButton.onclick = () => alert(`Você selecionou ${animal.nome}`); 
+                    petButton.onclick = () => selecionarPetParaServico(animal); 
                     petButton.innerHTML = `<span>${animal.nome}<br><small>(${animal.raca})</small></span>`;
                     petsContainer.appendChild(petButton);
                 });
             } else {
                 petsContainer.innerHTML = '<p style="font-size:28px;">Nenhum pet encontrado para este CPF.</p>';
             }
-
-            // Leva o usuário para a tela de seleção de pets
             goTo('pets');
-
         } else {
             alert('Cliente não encontrado ou erro ao buscar pets.');
         }
@@ -281,9 +369,17 @@ async function buscarPetsPorCPF() {
         alert('Não foi possível conectar ao servidor.');
     }
 }
+// Ela é chamada pelo clique no botão do pet.
+function selecionarPetParaServico(animal) {
+    // Primeiro, ela salva qual pet foi escolhido
+    petSelecionado = animal; 
+    console.log("Pet selecionado:", petSelecionado);
+    
+    // Depois, ela inicia a nota fiscal
+    _iniciarNotaFiscal(cpfClienteAtual);
+}
 
 // Cadastra o pet e, em caso de sucesso, volta para o menu principal.
-
 async function realizarCadastroPetEVoltar() {
     // Verifica se temos um CPF de cliente para associar o pet
     if (!cpfClienteAtual) {
@@ -328,4 +424,5 @@ async function realizarCadastroPetEVoltar() {
         console.error('Erro na requisição:', error);
         alert('Não foi possível conectar ao servidor.');
     }
+}
 }

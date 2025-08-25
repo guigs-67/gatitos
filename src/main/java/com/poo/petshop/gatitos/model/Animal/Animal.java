@@ -3,7 +3,7 @@ package com.poo.petshop.gatitos.model.Animal;
 public class Animal {
  
     private String nome;
-    private int peso;
+    private double peso;
     private String porte;
     private String especie;
     private String raca;
@@ -42,7 +42,7 @@ public class Animal {
         this.nome = nome;
     }
 
-    public int getPeso() {
+    public double getPeso() {
         return this.peso;
     }
     

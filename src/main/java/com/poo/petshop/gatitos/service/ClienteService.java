@@ -59,6 +59,17 @@ public class ClienteService {
         }
     }
 
+    //verifica se é vazio e se tem pelo menos 8 numeros
+    private void validarTelefone(String telefone) throws IOException {
+        if (telefone == null || telefone.trim().isEmpty()) {
+            throw new IOException("O telefone não pode ser nulo ou vazio.");
+        }
+        if (telefone.replaceAll("[^0-9]", "").length() < 8) {
+             throw new IOException("O telefone parece ser inválido. Deve conter pelo menos 8 dígitos.");
+        }
+    }
+
+
 
     public String cadastrarCliente(Cliente cliente) {
     try {
@@ -66,6 +77,7 @@ public class ClienteService {
         validarCPF(cliente.getCPF());
         verificarCPFDuplicado(cliente.getCPF());
         validarNome(cliente.getNome());
+        validarTelefone(cliente.getTelefone());
         validarEndereco(cliente.getEndereco());
 
         clientes.add(cliente);
@@ -84,6 +96,7 @@ public class ClienteService {
         // Valida o novo nome e enderço antes de salvar
         validarNome(novoNome);
         validarEndereco(novoEndereco);
+        validarTelefone(novoTelefone);
 
         clienteExistente.setNome(novoNome);
         clienteExistente.setEndereco(novoEndereco);

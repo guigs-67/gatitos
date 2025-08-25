@@ -23,13 +23,21 @@ public class NotaFiscalService {
         proximoId++;
         return novaNota;
     }
+    //Metodo para fazer a validação do Id inserido no metodo buscarCopiaPorID
+    private void validarId(int id){
+        if (id <= 0) {
+            throw new IllegalArgumentException("O ID precisa ser um número inteiro positivo diferente de 0");
+        }
+    }
     //Metodo para buscar uma nota pelo ID.
     public NotaFiscal buscarCopiaPorId(int id) {
+        //Valida o ID:
+        validarId(id);
         // Percorre a lista original para encontrar a nota
         for (NotaFiscal notaOriginal : this.bancoDeNotas) {
             //Se achar o id retorna o clone da nota original.
             if (notaOriginal.getId() == id) {
-                //Polimorfismo de sobrecarga: mesma assinatura mas como o parametro é de outro tipo retorna a nota fiscal esperada (o clone).
+                //Construtor da cópia
                 return new NotaFiscal(notaOriginal);
             }
         }

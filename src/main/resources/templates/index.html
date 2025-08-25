@@ -41,6 +41,7 @@
     <div class="options">
         <div class="btn" onclick="goTo('cadastro-cliente')"><span>Cadastrar Cliente</span></div>
         <div class="btn" onclick="goTo('busca-cliente-para-atualizar')"><span>Atualizar Cadastro</span></div>
+        <div class="btn btn-danger" onclick="listarClientesParaRemover()"><span>Remover Cliente</span></div>
     </div>
 </section>
 
@@ -64,6 +65,14 @@
     <div class="btn-rect" onclick="buscarClienteParaAtualizar()">Buscar Cliente</div>
 </section>
 
+<section id="lista-clientes-para-remover">
+    <div class="back" onclick="goTo('cadastramento')">⬅</div>
+    <h1 class="title">REMOVER CLIENTE</h1>
+    <p style="font-size:28px;">Selecione o cliente que deseja remover:</p>
+
+    <div id="container-lista-clientes-remover" class="options">
+        </div>
+</section>
 
    <section id="atualizar-cliente">
     <div class="back" onclick="goTo('busca-cliente-para-atualizar')">⬅</div>

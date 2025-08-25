@@ -119,6 +119,65 @@ async function realizarAtualizacaoCliente() {
     }
 }
 
+// lista os clientes para esolher quem será removido
+async function listarClientesParaRemover() {
+    try {
+        const response = await fetch('/api/clientes');
+        if (!response.ok) throw new Error('Falha ao buscar clientes.');
+
+        const clientes = await response.json();
+        const container = document.getElementById('container-lista-clientes-remover');
+        container.innerHTML = ''; // Limpa a lista antes de preencher
+
+        if (clientes.length === 0) {
+            container.innerHTML = '<p style="font-size:28px;">Nenhum cliente cadastrado.</p>';
+        } else {
+            clientes.forEach(cliente => {
+                const btn = document.createElement('div');
+                btn.className = 'btn btn-danger';
+                // Ao clicar, chama a função de confirmação, passando o CPF e o NOME
+                btn.onclick = () => confirmarRemocaoCliente(cliente.cpf, cliente.nome); 
+                btn.innerHTML = `<span>${cliente.nome}<br><small>CPF: ${cliente.cpf}</small></span>`;
+                container.appendChild(btn);
+            });
+        }
+        
+        // Leva o usuário para a tela com a lista de remoção
+        goTo('lista-clientes-para-remover');
+
+    } catch (error) {
+        console.error('Erro ao listar clientes:', error);
+        alert('Não foi possível carregar a lista de clientes.');
+    }
+}
+
+// Pede confirmação e chama o endpoint DELETE.
+async function confirmarRemocaoCliente(cpf, nome) {
+    const querRemover = confirm(`Tem certeza que deseja remover o cliente "${nome}"? \n\nEsta ação não pode ser desfeita.`);
+
+    if (querRemover) { // O código só continua se o usuário clicar em OK
+        try {
+            const response = await fetch(`/api/clientes/${cpf}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                const mensagemSucesso = await response.text();
+                alert(mensagemSucesso);
+                // Após remover, volta para o menu principal
+                goTo('menu');
+            } else {
+                const mensagemErro = await response.text();
+                alert(mensagemErro);
+            }
+        } catch (error) {
+            console.error('Erro na requisição de remoção:', error);
+            alert('Não foi possível conectar ao servidor.');
+        }
+    }
+    // Se o usuário clicar em "Cancelar", nada acontece.
+}
+
 async function realizarCadastroPet() {
     // 1. Verifica se temos um CPF de cliente para associar o pet
     if (!cpfClienteAtual) {

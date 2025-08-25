@@ -23,7 +23,69 @@ public class AnimalService {
         carregarAnimaisDoArquivo();
     }
 
+     /*  private String nome;
+    private int peso;
+    private String porte;
+    private String especie;
+    private String raca;
+    private String sexo;
+    private String cpfDono; // Campo para vincular o animal ao CPF do cliente */
+
+    //Validações para cadastramento de animais:
+    
+    private void validarPeso(double peso){
+        //verifica se é positivo
+        if (peso <= 0) {
+            throw new IllegalArgumentException("O peso do animal precisa ser um número inteiro positivo e diferente de 0");
+        }
+        //verifica se não é infinito ou not a number
+        if (Double.isNaN(peso) || Double.isInfinite(peso)) {
+        throw new IllegalArgumentException("O peso fornecido não é um número válido!");
+        }
+        //verifica se é um número plausivel
+        if (peso < 0.1 || peso > 100.0) {
+            throw new IllegalArgumentException("Peso fora dos limites. Deve estar entre 0.1g (100 gramas) e 100kg (100 quilos)");
+        }
+    }
+    private void validarPorte(String porte){
+        //valida se foi preenchido
+        if (porte == null || porte.trim().isEmpty()) {
+            throw new IllegalArgumentException("O porte não pode ser nulo ou vazio");
+        }
+    }
+    private void validarEspecie(String especie){
+        //valida se foi preenchido
+        if (especie == null || especie.trim().isEmpty()) {
+            throw new IllegalArgumentException("A especie não pode ser nula ou vazia");
+        }
+    }
+    private void validarRaca(String raca){
+        //valida se foi preenchido
+        if (raca == null || raca.trim().isEmpty()) {
+            throw new IllegalArgumentException("A raça não pode ser nula ou vazia");
+        }
+    }
+    private void validarSexo(String sexo){
+        //Valida se foi preenchido
+        if (sexo == null || sexo.trim().isEmpty()) {
+            throw new IllegalArgumentException("O sexo não pode ser nulo ou vazia");
+        }
+        //Formata para a entrada ficar maiúscula e remove espaços antes ou depois
+        String sexoFormatado = sexo.trim().toUpperCase();
+        //Verifica se ta dentro do padrão M ou F
+        if (!sexoFormatado.equals("M") && !sexoFormatado.equals("F")) {
+            throw new IllegalArgumentException("Sexo inválido. O valor deve ser 'M' ou 'F'.");
+        }
+
+    }
     public void cadastrarAnimal(Animal animal) {
+        //faz as validações
+        validarPeso(animal.getPeso());
+        validarPorte(animal.getPorte());
+        validarEspecie(animal.getEspecie());
+        validarRaca(animal.getRaca());
+        validarSexo(animal.getSexo());
+        
         this.animais.add(animal);
         salvarAnimaisNoArquivo();
     }

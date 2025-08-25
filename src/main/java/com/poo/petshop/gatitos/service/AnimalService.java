@@ -1,88 +1,83 @@
 package com.poo.petshop.gatitos.service;
 
 import com.poo.petshop.gatitos.model.Animal.Animal;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
-// Classe de serviço que gerencia os animais do petshop
+@Service 
 public class AnimalService {
 
-    // Lista em memória que armazena os animais cadastrados
     private List<Animal> animais;
+    private static final String ARQUIVO_ANIMAIS = "animais.txt";
 
-    // Construtor: inicia a lista de animais vazia, para o usuário começar a cadastrar
     public AnimalService() {
         this.animais = new ArrayList<>();
+        carregarAnimaisDoArquivo();
     }
 
-    // Recebe um objeto Animal e adiciona na lista
-    public boolean cadastrarAnimal(Animal animal) {
-        if (animal == null) {
-            System.out.println("Erro: animal não pode ser nulo!");
-            return false;
-        }
-        if (animal.getNome() == null || animal.getNome().trim().isEmpty()) {
-            System.out.println("Erro: nome do animal não pode ser vazio!");
-            return false;
-        }
-        if (animal.getPeso() <= 0) {
-            System.out.println("Erro: peso do animal deve ser maior que zero!");
-            return false;
-        }
-        if (animal.getEspecie() == null || animal.getEspecie().trim().isEmpty()) {
-            System.out.println("Erro: espécie não pode ser vazia!");
-            return false;
-        }
-
-        animais.add(animal);
-        System.out.println("Animal cadastrado com sucesso!");
-        return true;
+    public void cadastrarAnimal(Animal animal) {
+        this.animais.add(animal);
+        salvarAnimaisNoArquivo();
     }
 
-    // Retorna true se removeu com sucesso, false se não encontrou, fazendo todo processamento de remoção intermamente, sem "vazar" nenhum dado da lista
-    public boolean removerAnimal(String nome) {
-        for (int i = 0; i < animais.size(); i++) {
-            if (animais.get(i).getNome().equalsIgnoreCase(nome)) {
-                animais.remove(i);
-                System.out.println("Animal removido com sucesso!");
-                return true;
-            }
-        }
-        System.out.println("Animal não encontrado para remoção: " + nome);
-        return false;
+    // Busca todos os animais que pertencem a um determinado CPF
+    public List<Animal> listarAnimaisPorDono(String cpfDono) {
+        return this.animais.stream()
+            .filter(animal -> animal.getCpfDono().equals(cpfDono))
+            .collect(Collectors.toList());
     }
 
-    // Retorna uma lista de cópias dos animais cadastrados, pois assim, o usuário não terá acesso direto a lista original
-    public List<Animal> listarAnimais() {
-        List<Animal> copia = new ArrayList<>();
-        for (Animal animal : animais) {
-            copia.add(new Animal(
-                animal.getNome(),
-                animal.getPeso(),
-                animal.getPorte(),
-                animal.getEspecie(),    
-                animal.getRaca(),
-                animal.getSexo()
-            ));
-        }
-        return copia;
-    }
-
-    // Compara o nome dado, ao nome de cada um dos animias cadastrado e retorna uma cópia do objeto Animal que tiver o nome igual ao parâmetro
-    public Animal buscarAnimalPorNome(String nome) {
-        for (Animal animal : animais) {
-            if (animal.getNome().equalsIgnoreCase(nome)) {
-                // Retorna uma cópia do animal para preservar encapsulamento
-                return new Animal(
+    private void salvarAnimaisNoArquivo() { // Salva os animais no formato: cpfDono;nome;peso;porte;especie;raca;sexo
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(ARQUIVO_ANIMAIS), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+            for (Animal animal : animais) {
+                String linha = String.join(";",
+                    animal.getCpfDono(),
                     animal.getNome(),
-                    animal.getPeso(),
+                    String.valueOf(animal.getPeso()),
                     animal.getPorte(),
                     animal.getEspecie(),
                     animal.getRaca(),
                     animal.getSexo()
                 );
+                writer.write(linha);
+                writer.newLine();
             }
+        } catch (IOException e) {
+            System.err.println("Erro ao salvar animais no arquivo: " + e.getMessage());
         }
-        return null;
+    }
+
+    private void carregarAnimaisDoArquivo() { // Recria o objeto Animal a partir dos dados do arquivo
+        if (!Files.exists(Paths.get(ARQUIVO_ANIMAIS))) {
+            return;
+        }
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(ARQUIVO_ANIMAIS))) {
+            String linha;
+            while ((linha = reader.readLine()) != null) {
+                String[] dados = linha.split(";");
+                if (dados.length == 7) {
+                    Animal animal = new Animal(
+                        dados[1],
+                        Integer.parseInt(dados[2]),
+                        dados[3], 
+                        dados[4],
+                        dados[5],
+                        dados[6],
+                        dados[0]
+                    );
+                    this.animais.add(animal);
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            System.err.println("Erro ao carregar animais do arquivo: " + e.getMessage());
+        }
     }
 }

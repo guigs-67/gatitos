@@ -14,7 +14,7 @@ public class Animal {
     public Animal() {
     }
 
-    public Animal(String nome, int peso, String porte, String especie, String raca, String sexo, String cpfDono){
+    public Animal(String nome, double peso, String porte, String especie, String raca, String sexo, String cpfDono){
         this.nome = nome;
         this.peso = peso;
         this.porte = porte;
@@ -46,7 +46,7 @@ public class Animal {
         return this.peso;
     }
     
-    public void setPeso(int peso) {
+    public void setPeso(double peso) {
         this.peso = peso;
     }
 

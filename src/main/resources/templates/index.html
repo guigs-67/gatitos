@@ -49,9 +49,10 @@
         <input id="cliente-nome" class="input" placeholder="Nome do Cliente">
         <input id="cliente-endereco" class="input" placeholder="Endereço do Cliente">
         <input id="cliente-telefone" class="input" placeholder="Telefone do Cliente">
-        <input id="cliente-cpf" class="input" placeholder="CPF do Cliente">
+        <input id="cliente-cpf" class="input" placeholder="CPF do Cliente (11 dígitos)">
         <div class="btn" onclick="realizarCadastroCliente()"><span>Adicionar Pets</span></div>
     </section>
+
     <section id="busca-cliente-para-atualizar">
         <div class="back" onclick="goTo('cadastramento')">⬅</div>
         <h1 class="title">ATUALIZAR CADASTRO</h1>
@@ -59,12 +60,14 @@
         <input id="cpf-busca-atualizacao" class="input" placeholder="CPF do Cliente">
         <div class="btn-rect" onclick="buscarClienteParaAtualizar()">Buscar Cliente</div>
     </section>
+
     <section id="lista-clientes-para-remover">
         <div class="back" onclick="goTo('cadastramento')">⬅</div>
         <h1 class="title">REMOVER CLIENTE</h1>
         <p style="font-size:28px;">Selecione o cliente que deseja remover:</p>
         <div id="container-lista-clientes-remover" class="options"></div>
     </section>
+
     <section id="atualizar-cliente">
         <div class="back" onclick="goTo('busca-cliente-para-atualizar')">⬅</div>
         <h1 class="title">EDITANDO CLIENTE</h1>
@@ -72,7 +75,6 @@
         <input id="update-nome" class="input" placeholder="Atualizar Nome">
         <input id="update-endereco" class="input" placeholder="Atualizar Endereço">
         <input id="update-telefone" class="input" placeholder="Atualizar Telefone">
-        <div class="btn" onclick="goTo('cadastro-pet')"><span>Atualizar Pets?</span></div>
         <div class="btn-rect" onclick="realizarAtualizacaoCliente()">Salvar Alterações</div>
     </section>
     
@@ -82,8 +84,8 @@
         <input id="pet-nome" class="input" placeholder="Nome do Pet">
         <input id="pet-especie" class="input" placeholder="Espécie do Pet">
         <input id="pet-raca" class="input" placeholder="Raça do Pet">
-        <input id="pet-porte" class="input" placeholder="Estatura do Pet">
-        <input id="pet-peso" class="input" placeholder="Peso do Pet">
+        <input id="pet-porte" class="input" placeholder="Estatura do Pet (P, M, G)">
+        <input id="pet-peso" type="number" class="input" placeholder="Peso do Pet (kg)">
         <div>
             <button id="pet-sexo-m" class="sex-btn sex-m">M</button>
             <span style="font-size:28px;">SEXO</span>
@@ -111,13 +113,13 @@
     <section id="servicoMenu">
         <div class="back" onclick="goTo('pets')">⬅</div>
         <h1 class="title">REALIZAR SERVIÇO</h1>
-        <p style="font-size:28px;">Passo 3: Escolha a categoria</p>
+        <p style="font-size:28px;">Passo 3: Escolha a categoria do serviço</p>
         <div class="options">
             <div class="btn" onclick="goTo('estetica')"><span>Estética</span></div>
             <div class="btn" onclick="goTo('saude')"><span>Saúde</span></div>
         </div>
     </section>
-
+    
     <section id="estetica">
         <div class="back" onclick="goTo('servicoMenu')">⬅</div>
         <h1 class="title">SERVIÇO DE ESTÉTICA</h1>
@@ -126,6 +128,7 @@
             <div class="btn" onclick="selecionarServico('Banho')"><span>Banho</span></div>
             <div class="btn" onclick="selecionarServico('Tosa')"><span>Tosa</span></div>
             <div class="btn" onclick="selecionarServico('Banho e Tosa')"><span>Banho e Tosa</span></div>
+            <div class="btn" onclick="selecionarServico('Pacote Dia de Spa')"><span>Pacote Dia de Spa</span></div>
         </div>
     </section>
 
@@ -138,42 +141,41 @@
             <div class="btn" onclick="selecionarServico('Aplicação de Vacina')"><span>Vacinação</span></div>
         </div>
     </section>
-
-   <section id="nota">
-    <div class="back" onclick="goTo('menu')">⬅</div>
-    <div class="header">
-        <img src="/LogoPETCARE.png" alt="Logo PetCare">
-        <h1>Emissão de Nota</h1>
-    </div>
-    <div class="nota-container">
-        <div class="nota" id="notaFiscal">
-            <h2>PetCare Brasil Comercial</h2>
-            <p>CNPJ - 00.000.000/0000-00</p>
-            <h3>Nota Fiscal Eletrônica</h3>
-            <hr>
-            <table class="tabela">
-                <thead>
-                    <tr>
-                        <th>Serviço</th>
-                        <th>Qtd</th>
-                        <th>Valor Un</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody id="tabela-servicos">
-                </tbody>
-            </table>
-            <hr>
-            <p><strong>Qtd total de itens:</strong> <span id="qtdTotal"></span></p>
-            <p><strong>Valor total:</strong> R$ <span id="valorTotal"></span></p>
-            <hr>
-            <p><strong>Consumidor - CPF:</strong> <span id="cpf-nota"></span></p>
-            <p><strong>Data:</strong> <span id="data-nota"></span></p>
-            <p><strong>ID da Nota:</strong> <span id="idNota"></span></p>
+    
+    <section id="nota">
+        <div class="back" onclick="goTo('menu')">⬅</div>
+        <div class="header">
+             <img src="/LogoPETCARE.png" alt="Logo PetCare">
+            <h1>Emissão de Nota</h1>
         </div>
-        <button class="btn imprimir">Imprimir</button>
-    </div>
-</section>
+        <div class="nota-container">
+            <div class="nota" id="notaFiscal">
+                <h2>PetCare Brasil Comercial</h2>
+                <p>CNPJ - 00.000.000/0000-00</p>
+                <h3>Nota Fiscal Eletrônica</h3>
+                <hr>
+                <table class="tabela">
+                    <thead>
+                        <tr>
+                            <th>Serviço</th>
+                            <th>Qtd</th>
+                            <th>Valor Un</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-servicos"></tbody>
+                </table>
+                <hr>
+                <p><strong>Qtd total de itens:</strong> <span id="qtdTotal"></span></p>
+                <p><strong>Valor total:</strong> R$ <span id="valorTotal"></span></p>
+                <hr>
+                <p><strong>Consumidor - CPF:</strong> <span id="cpf-nota"></span></p>
+                <p><strong>Data:</strong> <span id="data-nota"></span></p>
+                <p><strong>ID da Nota:</strong> <span id="idNota"></span></p>
+            </div>
+            <button class="btn imprimir">Imprimir</button>
+        </div>
+    </section>
 
     <script src="/script.js"></script>
 </body>

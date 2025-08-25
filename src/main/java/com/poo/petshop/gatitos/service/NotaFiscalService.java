@@ -62,7 +62,7 @@ public class NotaFiscalService {
         Servicos servico = servicosService.buscarServicoPorNome(nomeServico);
         notaParaAtualizar.adicionarServico(servico);
         
-        return notaParaAtualizar;
+        return new NotaFiscal(notaParaAtualizar); // Retorna uma cópia da nota atualizada
     }
 
 

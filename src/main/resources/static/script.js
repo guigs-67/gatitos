@@ -1,11 +1,12 @@
 let cpfClienteAtual = '';
+let petSelecionado = null;
+let idNotaFiscalAtiva = null; // Variável para rastrear a nota fiscal em andamento
 
 function goTo(id) {
     // Esconde todas as seções
     document.querySelectorAll("section").forEach(sec => {
         sec.classList.remove("active");
     });
-
     // Mostra apenas a seção com o ID correspondente
     const targetSection = document.getElementById(id);
     if (targetSection) {
@@ -15,17 +16,15 @@ function goTo(id) {
     }
 }
 
-// Função que pega os objeto criado, e usa seus dados para preencher o html
+// Função que pega os objetos criados, e usa seus dados para preencher o html
 function preencherEExibirNota(notaFiscal) {
     document.getElementById('cpf-nota').textContent = notaFiscal.cliente.cpf;
     document.getElementById('data-nota').textContent = new Date(notaFiscal.dataHora).toLocaleString('pt-BR');
     document.getElementById('idNota').textContent = notaFiscal.id;
-    
     // Preenche a tabela de serviços
     const tabelaBody = document.getElementById('tabela-servicos');
     tabelaBody.innerHTML = ''; // Limpa qualquer conteúdo anterior da tabela
     let quantidadeTotalItens = 0;
-
     notaFiscal.itens.forEach(item => {
         const linha = document.createElement('tr');
         // Cria uma linha na tabela para cada item da nota
@@ -38,15 +37,11 @@ function preencherEExibirNota(notaFiscal) {
         tabelaBody.appendChild(linha);
         quantidadeTotalItens += item.quantidade;
     });
-
     // Preenche os totais da nota
     document.getElementById('qtdTotal').textContent = quantidadeTotalItens;
     document.getElementById('valorTotal').textContent = notaFiscal.totalFinal.toFixed(2);
-
-    // leva até a nota finalizada
-    goTo('nota');
+    goTo('nota'); // leva até a nota finalizada
 }
-
 
 async function realizarCadastroCliente() {
     const nome = document.getElementById('cliente-nome').value;
@@ -425,4 +420,74 @@ async function realizarCadastroPetEVoltar() {
         alert('Não foi possível conectar ao servidor.');
     }
 }
+
+// Função para iniciar a nota fiscal
+async function _iniciarNotaFiscal(cpf) {
+    try {
+        const response = await fetch('/api/notas-fiscais/iniciar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cpfCliente: cpf })
+        });
+        if (!response.ok) {
+            const erroMsg = await response.text();
+            throw new Error(erroMsg);
+        }
+        const novaNota = await response.json();
+        idNotaFiscalAtiva = novaNota.id; // guarda o id da nota
+        console.log(`Nota fiscal #${idNotaFiscalAtiva} iniciada.`);
+        goTo('servicoMenu');
+    } catch (error) {
+        alert(`Erro ao iniciar nota: ${error.message}`);
+        goTo('menu');
+    }
+}
+
+// Função para adicionar serviço na nota
+async function selecionarServico(tipoServico) {
+    if (!idNotaFiscalAtiva) {
+        alert("Erro: Nenhuma nota fiscal ativa. Por favor, reinicie o processo.");
+        return;
+    }
+    try {
+        const response = await fetch(`/api/notas-fiscais/${idNotaFiscalAtiva}/adicionar-servico`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ servico: tipoServico })
+        });
+        if (!response.ok) {
+            const erroMsg = await response.text();
+            throw new Error(erroMsg);
+        }
+        alert(`Serviço '${tipoServico}' adicionado com sucesso!`);
+        goTo('servicoMenu');
+    } catch (error) {
+        alert(`Erro ao adicionar serviço: ${error.message}`);
+    }
+}
+
+// Emite a nota fiscal com seus dados corretos
+async function visualizarNotaFiscalAtiva() {
+    if (!idNotaFiscalAtiva) {
+        alert("Nenhum serviço foi adicionado para emitir a nota.");
+        return;
+    }
+    try {
+        const response = await fetch(`/api/notas-fiscais/${idNotaFiscalAtiva}`);
+        if (!response.ok) {
+            const erroMsg = await response.text();
+            throw new Error(erroMsg);
+        }
+        const notaFiscalFinal = await response.json();
+        preencherEExibirNota(notaFiscalFinal);
+        idNotaFiscalAtiva = null; // Limpa a nota ativa
+    } catch (error) {
+        alert(`Erro ao buscar nota fiscal: ${error.message}`);
+    }
+}
+
+function selecionarPetParaServico(animal) {
+    petSelecionado = animal; 
+    console.log("Pet selecionado:", petSelecionado);
+    _iniciarNotaFiscal(cpfClienteAtual);
 }

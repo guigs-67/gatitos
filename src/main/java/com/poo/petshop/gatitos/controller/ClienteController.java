@@ -24,6 +24,20 @@ public class ClienteController {
         return clienteService.listarClientes();
     }
 
+    // buscar um cliente específico usando o cpf como parâmetro
+    @GetMapping("/{cpf}")
+    public ResponseEntity<Cliente> getClientePorCPF(@PathVariable String cpf) {
+        Cliente cliente = clienteService.buscarClientePorCPF(cpf);
+        
+        if (cliente != null) {
+            // se o cliente for encontrado, retorna os dados e o status 200 OK
+            return ResponseEntity.ok(cliente);
+        } else {
+            // se o cliente não for encontrado, retorna o status 404 Not Found
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
    // atualizar um cliente usando cpf como parametro
     @PutMapping("/{cpf}")
     public ResponseEntity<String> atualizarCliente(@PathVariable String cpf, @RequestBody Cliente dadosAtualizados) {

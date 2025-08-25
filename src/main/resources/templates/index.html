@@ -31,18 +31,18 @@
     </section>
 
     <section id="cadastramento">
-        <div class="back" onclick="goTo('menu')">⬅</div>
-        <h1 class="title">CADASTRAMENTO</h1>
-        <div class="logo">
-             <img src="/LogoPETCARE.png" alt="Logo PetCare">
-            <h2>PETCARE</h2>
-        </div>
-        <p style="font-size:28px;">O que deseja?</p>
-        <div class="options">
-            <div class="btn" onclick="goTo('cadastro-cliente')"><span>Cadastrar Cliente</span></div>
-            <div class="btn" onclick="goTo('atualizar-cliente')"><span>Atualizar Cadastro</span></div>
-        </div>
-    </section>
+    <div class="back" onclick="goTo('menu')">⬅</div>
+    <h1 class="title">CADASTRAMENTO</h1>
+    <div class="logo">
+        <img src="/LogoPETCARE.png" alt="Logo PetCare">
+        <h2>PETCARE</h2>
+    </div>
+    <p style="font-size:28px;">O que deseja?</p>
+    <div class="options">
+        <div class="btn" onclick="goTo('cadastro-cliente')"><span>Cadastrar Cliente</span></div>
+        <div class="btn" onclick="goTo('busca-cliente-para-atualizar')"><span>Atualizar Cadastro</span></div>
+    </div>
+</section>
 
     <section id="cadastro-cliente">
         <div class="back" onclick="goTo('cadastramento')">⬅</div>
@@ -54,16 +54,29 @@
         <div class="btn" onclick="realizarCadastroCliente()"><span>Adicionar Pets</span></div>
     </section>
 
-    <section id="atualizar-cliente">
-        <div class="back" onclick="goTo('cadastramento')">⬅</div>
-        <h1 class="title">ATUALIZAÇÃO DE CADASTRO</h1>
-        <input class="input" placeholder="CPF Atual do Cliente">
-        <input class="input" placeholder="Atualizar Nome">
-        <input class="input" placeholder="Atualizar Endereço">
-        <input class="input" placeholder="Atualizar Telefone">
-        <div class="btn" onclick="goTo('cadastro-pet')"><span>Atualizar Pets?</span></div>
-        <div class="btn-rect">Salvar Alterações</div>
-    </section>
+  <section id="busca-cliente-para-atualizar">
+    <div class="back" onclick="goTo('cadastramento')">⬅</div>
+    <h1 class="title">ATUALIZAR CADASTRO</h1>
+    <p style="font-size:28px;">Digite o CPF do cliente que deseja atualizar:</p>
+    
+    <input id="cpf-busca-atualizacao" class="input" placeholder="CPF do Cliente">
+    
+    <div class="btn-rect" onclick="buscarClienteParaAtualizar()">Buscar Cliente</div>
+</section>
+
+
+   <section id="atualizar-cliente">
+    <div class="back" onclick="goTo('busca-cliente-para-atualizar')">⬅</div>
+    <h1 class="title">EDITANDO CLIENTE</h1>
+    
+    <input id="update-cpf" class="input" placeholder="CPF do Cliente" readonly> 
+    <input id="update-nome" class="input" placeholder="Atualizar Nome">
+    <input id="update-endereco" class="input" placeholder="Atualizar Endereço">
+    <input id="update-telefone" class="input" placeholder="Atualizar Telefone">
+    
+    <div class="btn" onclick="goTo('cadastro-pet')"><span>Atualizar Pets?</span></div>
+    <div class="btn-rect" onclick="realizarAtualizacaoCliente()">Salvar Alterações</div>
+</section>
 
     <section id="cadastro-pet">
         <div class="back" onclick="goTo('cadastramento')">⬅</div>

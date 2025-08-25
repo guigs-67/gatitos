@@ -45,16 +45,14 @@
     </section>
 
     <section id="cadastro-cliente">
-    	<div class="back" onclick="goTo('cadastramento')">⬅</div>
-    	<h1 class="title">CADASTRO DE CLIENTE</h1>
-    
-    	<input id="cliente-nome" class="input" placeholder="Nome do Cliente">
-    	<input id="cliente-endereco" class="input" placeholder="Endereço do Cliente">
-    	<input id="cliente-telefone" class="input" placeholder="Telefone do Cliente">
-    	<input id="cliente-cpf" class="input" placeholder="CPF do Cliente">
-    
-    	<div class="btn" onclick="realizarCadastroCliente()"><span>Adicionar Pets</span></div>
-	</section>
+        <div class="back" onclick="goTo('cadastramento')">⬅</div>
+        <h1 class="title">CADASTRO DE CLIENTE</h1>
+        <input id="cliente-nome" class="input" placeholder="Nome do Cliente">
+        <input id="cliente-endereco" class="input" placeholder="Endereço do Cliente">
+        <input id="cliente-telefone" class="input" placeholder="Telefone do Cliente">
+        <input id="cliente-cpf" class="input" placeholder="CPF do Cliente">
+        <div class="btn" onclick="realizarCadastroCliente()"><span>Adicionar Pets</span></div>
+    </section>
 
     <section id="atualizar-cliente">
         <div class="back" onclick="goTo('cadastramento')">⬅</div>
@@ -69,24 +67,21 @@
     </section>
 
     <section id="cadastro-pet">
-    	<div class="back" onclick="goTo('cadastramento')">⬅</div>
-    	<h1 class="title">CADASTRO DE PETS</h1>
-    
-    	<input id="pet-nome" class="input" placeholder="Nome do Pet">
-    	<input id="pet-especie" class="input" placeholder="Espécie do Pet">
-    	<input id="pet-raca" class="input" placeholder="Raça do Pet">
-    	<input id="pet-porte" class="input" placeholder="Estatura do Pet">
-    	<input id="pet-peso" class="input" placeholder="Peso do Pet">
-    
-    	<div>
-        	<button id="pet-sexo-m" class="sex-btn sex-m">M</button>
-        	<span style="font-size:28px;">SEXO</span>
-        	<button id="pet-sexo-f" class="sex-btn sex-f">F</button>
-    	</div>
-    
-    	<div class="btn-rect" onclick="realizarCadastroPet()">Cadastrar Pet e Adicionar Outro</div>
-    	<div class="btn-rect" onclick="goTo('menu')">Cadastrar Pet e Voltar ao Menu</div>
-	</section>
+        <div class="back" onclick="goTo('cadastramento')">⬅</div>
+        <h1 class="title">CADASTRO DE PETS</h1>
+        <input id="pet-nome" class="input" placeholder="Nome do Pet">
+        <input id="pet-especie" class="input" placeholder="Espécie do Pet">
+        <input id="pet-raca" class="input" placeholder="Raça do Pet">
+        <input id="pet-porte" class="input" placeholder="Estatura do Pet">
+        <input id="pet-peso" class="input" placeholder="Peso do Pet">
+        <div>
+            <button id="pet-sexo-m" class="sex-btn sex-m">M</button>
+            <span style="font-size:28px;">SEXO</span>
+            <button id="pet-sexo-f" class="sex-btn sex-f">F</button>
+        </div>
+        <div class="btn-rect" onclick="realizarCadastroPet()">Cadastrar Pet e Adicionar Outro</div>
+        <div class="btn-rect" onclick="goTo('menu')">Cadastrar Pet e Voltar ao Menu</div>
+    </section>
 
     <section id="servicoMenu">
         <div class="back" onclick="goTo('menu')">⬅</div>
@@ -135,50 +130,9 @@
         <h1 class="title">PETS</h1>
         <p style="font-size:28px;">Selecione o pet que irá realizar o serviço:</p>
         <div class="options">
-            </div>
-    </section>
-
-    <section id="especialidades">
-        <div class="back" onclick="goTo('pets')">⬅</div>
-        <h1 class="title">CONSULTA</h1>
-        <p style="font-size:28px;">Selecione o veterinário especialista:</p>
-        <div class="options">
-            <div class="btn"><span>Consulta Geral</span></div>
-            <div class="btn"><span>Vet Infectologista</span></div>
-            <div class="btn"><span>Vet Dermatologista</span></div>
-            <div class="btn"><span>Vet Oncologista</span></div>
         </div>
     </section>
-
-    <section id="vacinas">
-        <div class="back" onclick="goTo('pets')">⬅</div>
-        <h1 class="title">VACINAÇÃO</h1>
-        <p style="font-size:28px;">Selecione a vacina:</p>
-        <div class="options">
-            <div class="btn"><span>Raiva</span></div>
-            <div class="btn"><span>Leishmaniose</span></div>
-            <div class="btn"><span>FIV</span></div>
-            <div class="btn"><span>Multi</span></div>
-        </div>
-    </section>
-
-    <section id="resumo">
-        <div class="back" onclick="goTo('servicoMenu')">⬅</div>
-        <h1 class="title">RESUMO</h1>
-        <div class="logo">
-             <img src="/LogoPETCARE.png" alt="Logo PetCare">
-            <h2>PETCARE</h2>
-        </div>
-        <p style="font-size:28px;">Resumo do pedido:</p>
-        <ul style="font-size:24px; list-style:none;">
-            <li><b>Nome do Pet:</b> <span id="resumoPet">—</span></li>
-            <li><b>Nome do Serviço:</b> <span id="resumoServico">—</span></li>
-            <li><b>Valor:</b> <span id="resumoValor">—</span></li>
-        </ul>
-        <div class="btn-rect">Confirmar e adicionar outro serviço</div>
-        <div class="btn-rect">Confirmar e ir para nota fiscal</div>
-    </section>
-
+    
     <section id="nota">
         <div class="back" onclick="goTo('menu')">⬅</div>
         <div class="header">
@@ -201,7 +155,7 @@
                         </tr>
                     </thead>
                     <tbody id="tabela-servicos">
-                        </tbody>
+                    </tbody>
                 </table>
                 <hr>
                 <p><strong>Qtd total de itens:</strong> <span id="qtdTotal"></span></p>

@@ -105,3 +105,53 @@ async function realizarCadastroPet() {
         alert('Não foi possível conectar ao servidor.');
     }
 }
+
+// Função para buscar pets pelo CPF do cliente
+async function buscarPetsPorCPF() {
+    // Pega o CPF digitado pelo usuário
+    const cpf = document.getElementById('cpf-busca').value;
+    if (!cpf) {
+        alert('Por favor, insira um CPF.');
+        return;
+    }
+
+    // Armazena o CPF para uso futuro (ao criar a nota fiscal)
+    cpfClienteAtual = cpf;
+
+    try {
+        // Chama o endpoint do back-end para buscar os animais
+        // A URL corresponde ao @GetMapping("/cliente/{cpf}") no AnimalController
+        const response = await fetch(`/api/animais/cliente/${cpf}`);
+
+        if (response.ok) {
+            const animais = await response.json(); // Converte a resposta em um array de objetos
+
+            // Pega o contêiner onde os botões dos pets serão exibidos
+            const petsContainer = document.getElementById('pets-container');
+            petsContainer.innerHTML = ''; // Limpa qualquer conteúdo anterior
+
+            if (animais.length > 0) {
+                // Para cada animal encontrado, cria um botão
+                animais.forEach(animal => {
+                    const petButton = document.createElement('div');
+                    petButton.className = 'btn';
+                    // Futuramente, este onclick irá para a seleção de serviço
+                    petButton.onclick = () => alert(`Você selecionou ${animal.nome}`); 
+                    petButton.innerHTML = `<span>${animal.nome}<br><small>(${animal.raca})</small></span>`;
+                    petsContainer.appendChild(petButton);
+                });
+            } else {
+                petsContainer.innerHTML = '<p style="font-size:28px;">Nenhum pet encontrado para este CPF.</p>';
+            }
+
+            // Leva o usuário para a tela de seleção de pets
+            goTo('pets');
+
+        } else {
+            alert('Cliente não encontrado ou erro ao buscar pets.');
+        }
+    } catch (error) {
+        console.error('Erro de rede ao buscar pets:', error);
+        alert('Não foi possível conectar ao servidor.');
+    }
+}

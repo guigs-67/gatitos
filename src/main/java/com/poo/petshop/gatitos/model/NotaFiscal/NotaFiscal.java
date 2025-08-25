@@ -68,31 +68,6 @@ public class NotaFiscal {
         this.calcularItensEtotal(); // Recalcula tudo sempre que algo novo é adicionado
     }
 
-    //Metodo de impressão
-    public void imprimir() {
-        //Formatador para estilo de data utilizada no nosso país.
-        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm");
-        System.out.println("\n========================================");
-        System.out.println("          NOTA FISCAL DO PETSHOP");
-        System.out.println("========================================");
-        System.out.println("Nota ID: " + this.id); 
-        System.out.println("Cliente: " + this.cliente.getNome() + " | CPF: " + this.cliente.getCPF());
-        System.out.println("Emitida em: " + this.dataHora.format(formatador));
-        System.out.println("----------------------------------------");
-
-        if (this.itens.isEmpty()) {
-            System.out.println("Nenhum serviço foi adicionado...");
-        } else {
-            for (ItemNota item : this.itens) {
-                System.out.println(item);
-            }
-        }
-
-        System.out.println("----------------------------------------");
-        System.out.printf("VALOR TOTAL: R$ %.2f\n", this.totalFinal);
-        System.out.println("========================================");
-    }
-
     //Metodo para calcular subtotal da linha da nota fiscal e total final.
     private void calcularItensEtotal() {
         //Mapea a Lista de serviços e agrupa os servicos pela descricao

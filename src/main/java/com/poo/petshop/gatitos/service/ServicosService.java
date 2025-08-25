@@ -51,6 +51,19 @@ public class ServicosService {
         return pacoteSpa;
     }
 
+    //metodo para receber o serviço que o cliente vai querer e usar ele posteriormente na nota fiscal
+    public Servicos buscarServicoPorNome(String nome) {
+    // Percorre a lista de serviços
+    for (Servicos servico : this.catalogoServicos) {
+        // Compara o nome do serviço (ignorando maiúsculas/minúsculas)
+        if (servico.getNome().equalsIgnoreCase(nome)) {
+            return servico; // Retorna o serviço se encontrar
+        }
+    }
+    // Se o loop terminar e não achar nada, retorna um erro
+    throw new RuntimeException("Serviço com o nome '" + nome + "' não encontrado no catálogo.");
+}
+
     // Métodos de Criação (Factory Methods)
     // Cria uma instância de um serviço Estético.
     private Servicos criarServicoEstetico(String nome, BigDecimal precoBase, boolean incluiBanho, boolean incluiTosa) {

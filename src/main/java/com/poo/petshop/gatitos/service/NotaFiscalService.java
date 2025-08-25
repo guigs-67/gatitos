@@ -1,47 +1,69 @@
 package com.poo.petshop.gatitos.service;
 
-import com.poo.petshop.gatitos.model.NotaFiscal.NotaFiscal;
 import com.poo.petshop.gatitos.model.Cliente.Cliente;
+import com.poo.petshop.gatitos.model.NotaFiscal.NotaFiscal;
+import com.poo.petshop.gatitos.model.Serviços.Servicos;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class NotaFiscalService {
 
-    //Cria nossa lista de notas fiscais.
     private final List<NotaFiscal> bancoDeNotas = new ArrayList<>();
-    //Contabilizador do ID
     private int proximoId = 1;
 
-    public NotaFiscal criar(Cliente cliente) {
-        NotaFiscal novaNota = new NotaFiscal(cliente);
-        //Atribui o ID atual
-        novaNota.setId(proximoId);
-        //Coloca a nota na nossa lista;
-        bancoDeNotas.add(novaNota); 
-        //Atualiza o ID para a proxima nota
-        proximoId++;
-        return novaNota;
+    private final ClienteService clienteService;
+    private final ServicosService servicosService;
+
+    public NotaFiscalService(ClienteService clienteService, ServicosService servicosService) {
+        this.clienteService = clienteService;
+        this.servicosService = servicosService;
     }
-    //Metodo para fazer a validação do Id inserido no metodo buscarCopiaPorID
-    private void validarId(int id){
-        if (id <= 0) {
-            throw new IllegalArgumentException("O ID precisa ser um número inteiro positivo diferente de 0");
-        }
+
+    private NotaFiscal criar(Cliente cliente) {
+    //cria uma nova nota fiscal
+    NotaFiscal novaNota = new NotaFiscal(cliente);
+    
+    // atribui o id dela,usando o próximo diponível
+    novaNota.setId(proximoId);
+    
+    // adiciona em uma lista em memória
+    bancoDeNotas.add(novaNota); 
+    
+    // 4. Incrementa o contador para o próximo ID
+    proximoId++;
+    
+    //Retorna a nota que acabamos de criar e salvar
+    return novaNota;
+}
+
+    //gerar nota fiscal pegando o cliente que esta comprando e quais serviços ele está comprando
+    public NotaFiscal gerarNotaParaServico(String cpfCliente, String nomeServico) {
+    Cliente cliente = clienteService.buscarClientePorCPF(cpfCliente);
+    if (cliente == null) {
+        throw new RuntimeException("Cliente com CPF " + cpfCliente + " não foi localizado.");
     }
-    //Metodo para buscar uma nota pelo ID.
+
+    //pega o serviço solicitado
+    Servicos servico = servicosService.buscarServicoPorNome(nomeServico);
+     
+    //cria uma nota fiscal
+    NotaFiscal novaNota = this.criar(cliente);
+
+    //pega o serviço que pegamos e põe na nota
+    novaNota.adicionarServico(servico);
+
+    // retorna a nota
+    return novaNota;
+    }
+
     public NotaFiscal buscarCopiaPorId(int id) {
-        //Valida o ID:
-        validarId(id);
-        // Percorre a lista original para encontrar a nota
-        for (NotaFiscal notaOriginal : this.bancoDeNotas) {
-            //Se achar o id retorna o clone da nota original.
-            if (notaOriginal.getId() == id) {
-                //Construtor da cópia
-                return new NotaFiscal(notaOriginal);
-            }
-        }
-        //Se não achar o id da nota até o final do loop chama o tratamento de exceções:
-        throw new RuntimeException("ERRO!!! Nota Fiscal com ID: " + id + " não foi encontrada!");
+        return bancoDeNotas.stream()
+                .filter(nota -> nota.getId() == id)
+                .findFirst()
+                // A API enviará o objeto de dados, então não precisamos mais do construtor de cópia aqui.
+                .orElseThrow(() -> new RuntimeException("ERRO!!! Nota Fiscal com ID: " + id + " não foi encontrada!"));
     }
 }

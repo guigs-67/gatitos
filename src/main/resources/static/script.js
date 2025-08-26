@@ -46,6 +46,7 @@ function preencherEExibirNota(notaFiscal) {
         tabelaBody.appendChild(linha);
         quantidadeTotalItens += item.quantidade;
     });
+	
     // Preenche os totais da nota
     document.getElementById('qtdTotal').textContent = quantidadeTotalItens;
     document.getElementById('valorTotal').textContent = notaFiscal.totalFinal.toFixed(2);

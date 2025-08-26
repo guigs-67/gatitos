@@ -21,7 +21,7 @@ public class Cliente {
     public void adicionarAnimal(Animal animal){ //método pega um animal que já foi cadastrado e adiciona ele a lista de animais do cliente
         this.animais.add(animal);
     }
-    //Métodos Get e Set para o usuário alterar os atributos respeitando o encapsulamento
+
     public void setCPF(String cpf){
         this.cpf = cpf;
     }

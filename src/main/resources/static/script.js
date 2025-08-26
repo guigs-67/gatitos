@@ -178,7 +178,7 @@ async function buscarClienteParaAtualizar() {
 
         if (response.ok) {
             const cliente = await response.json();
-
+			cpfClienteAtual = cliente.cpf;
             // Preenche os campos do formulário de edição com os dados encontrados
             document.getElementById('update-cpf').value = cliente.cpf;
             document.getElementById('update-nome').value = cliente.nome;

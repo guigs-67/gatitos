@@ -1,0 +1,6 @@
+11111111111;Yuki;6.0;P;Gato;Frajola;F
+11111111111;Thor;8.0;P;Gato;Fofo;M
+11111111111;Khaleesi;11.0;M;Gato;Siames;F
+11111111111;Brisa;50;G;Cachorro;Labrador;F
+33333333333;Bella;3.5;P;Gato;SRD;F
+33333333333;Salem;6.5;P;Gato;SRD:M

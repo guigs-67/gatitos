@@ -19,7 +19,16 @@ function goTo(id) {
 // Função que pega os objetos criados, e usa seus dados para preencher o html
 function preencherEExibirNota(notaFiscal) {
     document.getElementById('cpf-nota').textContent = notaFiscal.cliente.cpf;
-    document.getElementById('data-nota').textContent = new Date(notaFiscal.dataHora).toLocaleString('pt-BR');
+	const data = new Date(notaFiscal.dataHora);
+	    const opcoesDeFormatacao = {
+	        day: '2-digit',
+	        month: '2-digit',
+	        year: 'numeric',
+	        hour: '2-digit',
+	        minute: '2-digit'
+	    };
+	    const dataFormatada = data.toLocaleDateString('pt-BR', opcoesDeFormatacao);
+	    document.getElementById('data-nota').textContent = dataFormatada.replace(',', ' às');
     document.getElementById('idNota').textContent = notaFiscal.id;
     // Preenche a tabela de serviços
     const tabelaBody = document.getElementById('tabela-servicos');

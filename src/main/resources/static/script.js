@@ -298,9 +298,7 @@ async function realizarCadastroPet() {
     const raca = document.getElementById('pet-raca').value;
     const porte = document.getElementById('pet-porte').value;
     const peso = parseInt(document.getElementById('pet-peso').value);
-    
-    // Simples lógica para pegar o sexo (pode ser melhorada)
-    const sexo = 'M'; // Assumindo 'M' por padrão, você pode adicionar a lógica para os botões
+    const sexo = document.getElementById('pet-sexo').value;
 
     // 3. Cria o objeto do animal, incluindo o cpfDono
     const animalData = {
@@ -440,7 +438,7 @@ async function realizarCadastroPetEVoltar() {
     const raca = document.getElementById('pet-raca').value;
     const porte = document.getElementById('pet-porte').value;
     const peso = parseInt(document.getElementById('pet-peso').value);
-    const sexo = 'M'; // Assumindo 'M' por padrão
+    const sexo = document.getElementById('pet-sexo').value;
 
     const animalData = { nome, especie, raca, porte, peso, sexo, cpfDono: cpfClienteAtual };
 

@@ -86,11 +86,8 @@
         <input id="pet-raca" class="input" placeholder="Raça do Pet">
         <input id="pet-porte" class="input" placeholder="Estatura do Pet (P, M, G)">
         <input id="pet-peso" type="number" class="input" placeholder="Peso do Pet (kg)">
-        <div>
-            <button id="pet-sexo-m" class="sex-btn sex-m">M</button>
-            <span style="font-size:28px;">SEXO</span>
-            <button id="pet-sexo-f" class="sex-btn sex-f">F</button>
-        </div>
+        <input id="pet-sexo" class="input" placeholder="Sexo(F, M)">
+
         <div class="btn-rect" onclick="realizarCadastroPet()">Cadastrar Pet e Adicionar Outro</div>
         <div class="btn-rect" onclick="realizarCadastroPetEVoltar()">Cadastrar Pet e Voltar ao Menu</div>
     </section>
@@ -172,9 +169,6 @@
                 <p><strong>Consumidor - CPF:</strong> <span id="cpf-nota"></span></p>
                 <p><strong>Data:</strong> <span id="data-nota"></span></p>
                 <p><strong>ID da Nota:</strong> <span id="idNota"></span></p>
-            </div>
-            <button class="btn imprimir">Imprimir</button>
-        </div>
     </section>
 
     <script src="/script.js"></script>

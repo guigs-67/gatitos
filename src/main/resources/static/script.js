@@ -331,47 +331,89 @@ async function realizarCadastroPet() {
 
 // Função para buscar pets pelo CPF do cliente
 async function buscarPetsPorCPF() {
+    console.log("1. Função buscarPetsPorCPF iniciada.");
     const cpf = document.getElementById('cpf-busca').value;
     if (!cpf) {
         alert('Por favor, insira um CPF.');
         return;
     }
-    cpfClienteAtual = cpf;
-    try {
-        const response = await fetch(`/api/animais/cliente/${cpf}`);
-        if (response.ok) {
-            const animais = await response.json();
-            const petsContainer = document.getElementById('pets-container');
-            petsContainer.innerHTML = '';
 
-            if (animais.length > 0) {
-                animais.forEach(animal => {
-                    const petButton = document.createElement('div');
-                    petButton.className = 'btn';
-                    petButton.onclick = () => selecionarPetParaServico(animal); 
-                    petButton.innerHTML = `<span>${animal.nome}<br><small>(${animal.raca})</small></span>`;
-                    petsContainer.appendChild(petButton);
-                });
-            } else {
-                petsContainer.innerHTML = '<p style="font-size:28px;">Nenhum pet encontrado para este CPF.</p>';
+    // agora teremos uma nota fiscal para cada cliente por CPF
+    if (cpf !== cpfClienteAtual || idNotaFiscalAtiva === null) {
+        console.log("2. CPF é novo. Tentando iniciar uma nova nota fiscal...");
+        cpfClienteAtual = cpf;
+        
+        // Inicia uma nota fiscal usando o CPF fornecido
+        try {
+            console.log("3. Fazendo a chamada 'fetch' para /api/notas-fiscais/iniciar...");
+            const responseNota = await fetch('/api/notas-fiscais/iniciar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cpfCliente: cpf })
+            });
+            
+            // Verifica se iniciou ou não a nota
+            console.log("4. Resposta do '/iniciar' recebida. Status OK?", responseNota.ok);
+            if (!responseNota.ok) {
+                const erroMsg = await responseNota.text();
+                throw new Error(erroMsg);
             }
-            goTo('pets');
-        } else {
-            alert('Cliente não encontrado ou erro ao buscar pets.');
+
+            const novaNota = await responseNota.json();
+            idNotaFiscalAtiva = novaNota.id;
+            console.log(`5. Nota fiscal #${idNotaFiscalAtiva} iniciada com sucesso.`);
+
+        } catch (error) {
+            console.error("ERRO na criação da nota:", error);
+            alert(`Erro ao iniciar nota: ${error.message}`);
+            cpfClienteAtual = '';
+            idNotaFiscalAtiva = null;
+            goTo('cpf');
+            return;
         }
+    } else {
+        console.log(`2. CPF é o mesmo. Continuando com a nota fiscal #${idNotaFiscalAtiva}.`);
+    }
+
+    // Faz a chamada para buscar os pets do cliente
+    try {
+        console.log("6. Fazendo a chamada 'fetch' para buscar os pets...");
+        const responsePets = await fetch(`/api/animais/cliente/${cpf}`);
+        console.log("7. Resposta dos pets recebida. Status OK?", responsePets.ok);
+
+        const animais = await responsePets.json();
+        const petsContainer = document.getElementById('pets-container');
+        petsContainer.innerHTML = '';
+        
+        if (animais.length > 0) {
+            animais.forEach(animal => {
+                const petButton = document.createElement('div');
+                petButton.className = 'btn';
+                petButton.onclick = () => selecionarPetParaServico(animal);
+                petButton.innerHTML = `<span>${animal.nome}<br><small>(${animal.raca})</small></span>`;
+                petsContainer.appendChild(petButton);
+            });
+        } else {
+            petsContainer.innerHTML = '<p style="font-size:28px;">Nenhum pet encontrado para este CPF.</p>';
+        }
+
+        console.log("8. Exibindo a lista de pets e navegando para a tela 'pets'.");
+        goTo('pets');
+
     } catch (error) {
-        console.error('Erro de rede ao buscar pets:', error);
-        alert('Não foi possível conectar ao servidor.');
+        console.error("ERRO na busca dos pets:", error);
+        alert('Não foi possível conectar ao servidor para buscar os pets.');
     }
 }
+
 // Ela é chamada pelo clique no botão do pet.
 function selecionarPetParaServico(animal) {
-    // Primeiro, ela salva qual pet foi escolhido
+    // Salva o pet escolhido
     petSelecionado = animal; 
     console.log("Pet selecionado:", petSelecionado);
     
-    // Depois, ela inicia a nota fiscal
-    _iniciarNotaFiscal(cpfClienteAtual);
+    // Depois, ela te leva para a tela do menu de serviços.
+    goTo('servicoMenu');
 }
 
 // Cadastra o pet e, em caso de sucesso, volta para o menu principal.
@@ -435,6 +477,7 @@ async function _iniciarNotaFiscal(cpf) {
         }
         const novaNota = await response.json();
         idNotaFiscalAtiva = novaNota.id; // guarda o id da nota
+        cpfNotaFiscalAtiva = cpf; // guarda o cpf do cliente da nota
         console.log(`Nota fiscal #${idNotaFiscalAtiva} iniciada.`);
         goTo('servicoMenu');
     } catch (error) {
@@ -487,7 +530,10 @@ async function visualizarNotaFiscalAtiva() {
 }
 
 function selecionarPetParaServico(animal) {
+    // Salva o pet escolhido
     petSelecionado = animal; 
     console.log("Pet selecionado:", petSelecionado);
-    _iniciarNotaFiscal(cpfClienteAtual);
+    
+    // Depois, ela te leva para a tela do menu de serviços.
+    goTo('servicoMenu');
 }

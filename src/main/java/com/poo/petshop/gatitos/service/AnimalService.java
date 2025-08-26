@@ -23,18 +23,10 @@ public class AnimalService {
         carregarAnimaisDoArquivo();
     }
 
-     /*  private String nome;
-    private int peso;
-    private String porte;
-    private String especie;
-    private String raca;
-    private String sexo;
-    private String cpfDono; // Campo para vincular o animal ao CPF do cliente */
-
     //Validações para cadastramento de animais:
     
     private void validarPeso(double peso){
-        //verifica se é positivo
+        //verifica se o peso é positivo
         if (peso <= 0) {
             throw new IllegalArgumentException("O peso do animal precisa ser um número inteiro positivo e diferente de 0");
         }
@@ -79,7 +71,7 @@ public class AnimalService {
 
     }
     public void cadastrarAnimal(Animal animal) {
-        //faz as validações
+        //chama as validações 
         validarPeso(animal.getPeso());
         validarPorte(animal.getPorte());
         validarEspecie(animal.getEspecie());

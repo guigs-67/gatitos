@@ -46,6 +46,7 @@ function preencherEExibirNota(notaFiscal) {
         tabelaBody.appendChild(linha);
         quantidadeTotalItens += item.quantidade;
     });
+	
     // Preenche os totais da nota
     document.getElementById('qtdTotal').textContent = quantidadeTotalItens;
     document.getElementById('valorTotal').textContent = notaFiscal.totalFinal.toFixed(2);
@@ -177,7 +178,7 @@ async function buscarClienteParaAtualizar() {
 
         if (response.ok) {
             const cliente = await response.json();
-
+			cpfClienteAtual = cliente.cpf;
             // Preenche os campos do formulário de edição com os dados encontrados
             document.getElementById('update-cpf').value = cliente.cpf;
             document.getElementById('update-nome').value = cliente.nome;

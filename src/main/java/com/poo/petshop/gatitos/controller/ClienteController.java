@@ -18,7 +18,7 @@ public class ClienteController {
         this.clienteService = clienteService;
     }
 
-    // Método para listar todos os clientes (permanece o mesmo)
+    // Método para listar todos os clientes
     @GetMapping
     public List<Cliente> listarClientes() {
         return clienteService.listarClientes();

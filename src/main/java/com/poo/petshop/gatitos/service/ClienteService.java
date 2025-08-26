@@ -118,10 +118,12 @@ public class ClienteService {
     }
 }
 
+    // Retorna uma cópia da lista de clientes para garantir o encapsulamento
     public List<Cliente> listarClientes() {
         return new ArrayList<>(clientes);
     }
 
+    // Busca cliente usando cpf como parêmetro
     public Cliente buscarClientePorCPF(String cpf) {
         if (cpf == null) return null;
         for (Cliente cliente : clientes) {
@@ -132,7 +134,7 @@ public class ClienteService {
         return null;
     }
 
-
+    //Salva os clientes em um arquivo de texto, para garantir uma persistência de dados que funcione e seja simples
     private void salvarClientesNoArquivo() {
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(ARQUIVO_CLIENTES), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
             for (Cliente cliente : clientes) {
@@ -145,7 +147,8 @@ public class ClienteService {
         }
     }
 
-    private void carregarClientesDoArquivo() { // Se existir, lê o arquivo e popula a lista de clientes
+    // Se existir, lê o arquivo e preenche a lista de clientes
+    private void carregarClientesDoArquivo() { 
         if (!Files.exists(Paths.get(ARQUIVO_CLIENTES))) {
             return;
         }

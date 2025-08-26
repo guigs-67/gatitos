@@ -23,13 +23,14 @@ public class NotaFiscalService {
     }
 
     private NotaFiscal criar(Cliente cliente) {
-        //cria uma nova nota fiscal
+
+        //cria uma nova nota fiscal, tendo incialmente apenas o cliente como parâmetro
         NotaFiscal novaNota = new NotaFiscal(cliente);
         
         // atribui o id dela,usando o próximo diponível
         novaNota.setId(proximoId);
         
-        // adiciona em uma lista em memória
+        // adiciona em uma lista em memória, quando der refresh, ela se perde
         bancoDeNotas.add(novaNota); 
         
         // Incrementa o contador para o próximo ID
@@ -39,9 +40,8 @@ public class NotaFiscalService {
         return novaNota;
     }
 
-
-       // inicia a nota fiscal vazia
-    public NotaFiscal iniciarNotaFiscal(String cpfCliente) {
+     // Inicia a nota fiscal vazia, buscando o cliente pelo cpf
+     public NotaFiscal iniciarNotaFiscal(String cpfCliente) {
         Cliente cliente = clienteService.buscarClientePorCPF(cpfCliente);
         if (cliente == null) {
             throw new RuntimeException("Cliente com CPF " + cpfCliente + " não foi localizado para iniciar a nota.");
@@ -58,19 +58,20 @@ public class NotaFiscalService {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Nota Fiscal com ID: " + idNota + " não foi encontrada!"));
 
-        // método para buscar o nome do serviço e o utilizar na nota 
+        // método para buscar o nome do serviço e o colcoar na nota 
         Servicos servico = servicosService.buscarServicoPorNome(nomeServico);
         notaParaAtualizar.adicionarServico(servico);
         
         return new NotaFiscal(notaParaAtualizar); // Retorna uma cópia da nota atualizada
     }
 
-
-    public NotaFiscal buscarCopiaPorId(int id) { //proucura uma nota fiscal por id e retorna uma cópia dela
-        return bancoDeNotas.stream()
-            .filter(nota -> nota.getId() == id)
-            .findFirst()
-            .map(NotaFiscal::new)  
-            .orElseThrow(() -> new RuntimeException("ERRO!!! Nota Fiscal com ID: " + id + " não foi encontrada!"));
+    //retorna uma cópia da nota encontrada, para garantir o encapsulamento
+    public NotaFiscal buscarCopiaPorId(int id) {
+    for (NotaFiscal nota : bancoDeNotas) {
+        if (nota.getId() == id) {
+            return new NotaFiscal(nota); 
+        }
+    }
+    throw new RuntimeException("ERRO!!! Nota Fiscal com ID: " + id + " não foi encontrada!");
     }
 }

@@ -10,7 +10,7 @@ public class Animal {
     private String sexo;
     private String cpfDono; // Campo para vincular o animal ao CPF do cliente
 
-    // Construtor vazio para o Spring
+    // Construtor vazio para o Spring criar o objeto automaticamente
     public Animal() {
     }
 
@@ -23,8 +23,6 @@ public class Animal {
         this.sexo = sexo;
         this.cpfDono = cpfDono;
     }
-
-    // Getters e Setters para todos os campos, incluindo o novo de cpfDono
 
     public String getCpfDono() {
         return cpfDono;

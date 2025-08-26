@@ -38,7 +38,7 @@ public class NotaFiscalController {
         }
     }
 
-    // Pega a nota fiscal finalizada para exibi-la
+    // Pega a nota fiscal finalizada para exibi-la, usando seu id como parêmetro
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarNotaPorId(@PathVariable int id) {
         try {
@@ -50,7 +50,7 @@ public class NotaFiscalController {
     }
 }
 
-// feito apenas para servir como uma DTO(um jeito organizado de passar os dados) para o front, pra facilitar a exposição desses dados
+// feito apenas para servir como um pseudo DTO(um jeito organizado de passar os dados) para o front, pra facilitar a exposição desses dados
 
 class IniciarNotaRequest {
     private String cpfCliente;

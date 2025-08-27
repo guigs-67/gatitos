@@ -328,6 +328,7 @@ async function realizarCadastroPet() {
             document.getElementById('pet-raca').value = '';
             document.getElementById('pet-porte').value = '';
             document.getElementById('pet-peso').value = '';
+            document.getElementById('pet-sexo').value = '';
         } else {
             alert('Erro ao cadastrar o pet.');
         }
@@ -459,6 +460,7 @@ async function realizarCadastroPetEVoltar() {
             document.getElementById('pet-raca').value = '';
             document.getElementById('pet-porte').value = '';
             document.getElementById('pet-peso').value = '';
+            document.getElementById('pet-sexo').value = '';
             
             // Volta para o menu
             goTo('menu'); 

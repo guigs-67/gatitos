@@ -1,4 +1,5 @@
 package com.poo.petshop.gatitos.model.NotaFiscal;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.poo.petshop.gatitos.model.Cliente.Cliente;
 import com.poo.petshop.gatitos.model.Serviços.Servicos;
 import com.poo.petshop.gatitos.model.ItemNota.ItemNota;
@@ -13,7 +14,8 @@ public class NotaFiscal {
 
     private int id;
     private Cliente cliente;
-    //Atributo para "imprimir" hora e data exata
+    //formato de data que o Date lá no Js vai conseguir ler, e a responsabilidade de deixar a data do jeito que estamos acostumados passa a ser do JavaScript
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private final LocalDateTime dataHora;
     private final List<Servicos> servicos;
     private List<ItemNota> itens;
